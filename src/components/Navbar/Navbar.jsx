@@ -40,12 +40,15 @@ const Navbar = () => {
               {links}
             </ul>
           </div>
-          <div className="w-28">
-            <a href="#" className="">
-              <img
-                src="https://i.ibb.co.com/60GCfD8H/plateshare-logo-BBLm-FDgm.png"
-                alt=""
-              />
+          <div className="">
+            <a href="#" className="flex items-center gap-1">
+              <div className="w-10">
+                <img
+                  src="https://i.ibb.co.com/3Y5HsyM0/plateshare-logo-BBLm-FDgm.png"
+                  alt="logo"
+                />
+              </div>
+              <span className="lg:block hidden mt-3 font-black">Plate Share</span>
             </a>
           </div>
         </div>
