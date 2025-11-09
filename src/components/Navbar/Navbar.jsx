@@ -13,7 +13,7 @@ const Navbar = () => {
   );
   return (
     <div className="shadow-sm">
-      <div className="navbar container mx-auto">
+      <div className="navbar container mx-auto items-center">
         <div className="navbar-start items-center justify-between lg:justify-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -41,14 +41,16 @@ const Navbar = () => {
             </ul>
           </div>
           <div className="">
-            <a href="#" className="flex items-center gap-1">
+            <a href="/" className="flex items-center gap-1">
               <div className="w-10">
                 <img
                   src="https://i.ibb.co.com/3Y5HsyM0/plateshare-logo-BBLm-FDgm.png"
                   alt="logo"
                 />
               </div>
-              <span className="lg:block hidden mt-3 font-black">Plate Share</span>
+              <span className="lg:block hidden mt-2 font-black elms-font text-xl">
+                Plate Share
+              </span>
             </a>
           </div>
         </div>
@@ -56,6 +58,7 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
         <div className="navbar-end gap-5">
+
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
@@ -82,14 +85,15 @@ const Navbar = () => {
               <li>
                 <NavLink to={'/food-req'}>My Food Requests</NavLink>
               </li>
-              <NavLink to={'/login'} className="btn">
+              <NavLink to={'/login'} className="btn bg-[#f0845c] text-white">
                 Logout
               </NavLink>
             </ul>
           </div>
-          <NavLink to={'/login'} className="btn">
+          <NavLink to={'/login'} className="btn bg-[#f0845c] text-white">
             Login
           </NavLink>
+          
         </div>
       </div>
     </div>
