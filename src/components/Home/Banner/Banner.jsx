@@ -4,11 +4,12 @@ import { LuChefHat } from 'react-icons/lu';
 import { GrLocation } from 'react-icons/gr';
 import { FaRegStar } from 'react-icons/fa';
 import { FaStar } from 'react-icons/fa6';
+import { NavLink } from 'react-router';
 
 
 const Banner = () => {
   return (
-    <div className="py-28 grid lg:grid-cols-2 grid-cols-1 lg:gap-0 gap-10">
+    <div className="py-28 grid lg:grid-cols-2 grid-cols-1 lg:gap-0 gap-10 container mx-auto">
       <div className="banner-left lg:max-w-[90%] max-w-full">
         <h1 className="lg:text-6xl text-5xl elms-font font-bold mb-6">
           Share Meals,
@@ -21,12 +22,12 @@ const Banner = () => {
           authentic, homemade meals made with love.
         </p>
         <div className="flex gap-5">
-          <button className="btn bg-[#f0845c] text-white hover:scale-105 transition-all ease-in-out hover:shadow-2xl shadow-2xl shadow-[#817e7e] elms-font">
+          <NavLink to={"/available-food"} className="btn bg-[#f0845c] text-white hover:scale-105 transition-all ease-in-out hover:shadow-2xl shadow-2xl shadow-[#817e7e] elms-font">
             View All Foods <FaArrowRightLong />
-          </button>
-          <button className="btn bg-[#f5f5f5] shadow-2xl hover:scale-105 transition-all ease-in-out hover:shadow-2xl shadow-[#817e7e] hover:border-[#F0845C] hover:text-gray-500 elms-font">
+          </NavLink>
+          <NavLink to={"/add-food"} className="btn bg-[#f5f5f5] shadow-2xl hover:scale-105 transition-all ease-in-out hover:shadow-2xl shadow-[#817e7e] hover:border-[#F0845C] hover:text-gray-500 elms-font">
             Add Food
-          </button>
+          </NavLink>
         </div>
         <p className="text-[10px] text-[#00000075] mt-8 mb-16">
           ✓ Active Donator: 1,200+ • ✓ Happy Clients: 10,000+

@@ -62,16 +62,27 @@ const Footer = () => {
           <h4 className="uppercase font-extrabold">Contact Info</h4>
           <ul className="flex flex-col gap-3 text-neutral-800">
             <li>
-              <span className='font-black text-neutral-950 elms-font'>Address: </span>Mymensingh,Bangladesh
+              <span className="font-black text-neutral-950 elms-font">
+                Address:{' '}
+              </span>
+              Mymensingh,Bangladesh
             </li>
             <li>
-              <span className='font-black text-neutral-950 elms-font'>Phone: </span>+88 01777 22 77 99
+              <span className="font-black text-neutral-950 elms-font">
+                Phone:{' '}
+              </span>
+              +88 01777 22 77 99
             </li>
-            <li><span className='font-black text-neutral-950 elms-font'>Email: </span>info@plateshare.com</li>
+            <li>
+              <span className="font-black text-neutral-950 elms-font">
+                Email:{' '}
+              </span>
+              info@plateshare.com
+            </li>
           </ul>
         </div>
       </div>
-      
+
       {/* copyright */}
       <div className="text-center text-xs border-t border-t-gray-300 relative z-10 pt-8 mt-10">
         <p>© 2025 Plate Share. All Rights Reserved.</p>
