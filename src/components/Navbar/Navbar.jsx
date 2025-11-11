@@ -1,19 +1,32 @@
-import { NavLink } from 'react-router';
+import { NavLink, useLocation } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import { useContext } from 'react';
 
 const Navbar = () => {
+  const { logOut, user } = useContext(AuthContext);
+  const location = useLocation();
+
+  const isAuthPage = ['/login', '/register'].includes(location.pathname);
+
   const links = (
     <>
       <li>
-        <NavLink to={'/'}>Home</NavLink>
+        <NavLink to="/">Home</NavLink>
       </li>
       <li>
-        <NavLink to={'/available-food'}>Available Foods</NavLink>
+        <NavLink to="/available-food">Available Foods</NavLink>
       </li>
     </>
   );
+
   return (
-    <div className="shadow-sm">
+    <div
+      className={`shadow-sm transition-colors duration-300 ${
+        isAuthPage ? 'bg-white/70 backdrop-blur-md' : 'bg-[#f7f7f7]'
+      }`}
+    >
       <div className="navbar max-w-[81%] mx-auto items-center">
+        {/* Left side */}
         <div className="navbar-start items-center justify-between lg:justify-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -24,76 +37,86 @@ const Navbar = () => {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                {' '}
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
                   d="M4 6h16M4 12h8m-8 6h16"
-                />{' '}
+                />
               </svg>
             </div>
             <ul
-              tabIndex="-1"
+              tabIndex={-1}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
               {links}
             </ul>
           </div>
-          <div className="">
-            <a href="/" className="flex items-center gap-1">
-              <div className="w-10">
-                <img
-                  src="https://i.ibb.co.com/3Y5HsyM0/plateshare-logo-BBLm-FDgm.png"
-                  alt="logo"
-                />
-              </div>
-              <span className="lg:block hidden mt-2 font-black elms-font text-xl">
-                Plate Share
-              </span>
-            </a>
-          </div>
+          <a href="/" className="flex items-center gap-1">
+            <div className="w-10">
+              <img
+                src="https://i.ibb.co.com/3Y5HsyM0/plateshare-logo-BBLm-FDgm.png"
+                alt="logo"
+              />
+            </div>
+            <span className="lg:block hidden mt-2 font-black elms-font text-xl">
+              Plate Share
+            </span>
+          </a>
         </div>
+
+        {/* Middle */}
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
-        <div className="navbar-end gap-5">
 
-          <div className="dropdown dropdown-end">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost btn-circle avatar"
-            >
-              <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS Navbar component"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                />
+        {/* Right side */}
+        <div className="navbar-end gap-5">
+          {user ? (
+            <div className="dropdown dropdown-end">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost btn-circle avatar"
+              >
+                <div className="w-10 rounded-full">
+                  <img
+                    alt="User avatar"
+                    src={
+                      user.photoURL ||
+                      'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+                    }
+                  />
+                </div>
               </div>
+              <ul
+                tabIndex={-1}
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+              >
+                <li>
+                  <NavLink to="/add-food">Add Food</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/my-food">Manage My Foods</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/food-req">My Food Requests</NavLink>
+                </li>
+                <li>
+                  <button
+                    onClick={logOut}
+                    className="btn bg-[#f0845c] text-white"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
             </div>
-            <ul
-              tabIndex="-1"
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-            >
-              <li>
-                <NavLink to={'/add-food'}>Add Food</NavLink>
-              </li>
-              <li>
-                <NavLink to={'/my-food'}>Manage My Foods</NavLink>
-              </li>
-              <li>
-                <NavLink to={'/food-req'}>My Food Requests</NavLink>
-              </li>
-              <NavLink to={'/login'} className="btn bg-[#f0845c] text-white">
-                Logout
-              </NavLink>
-            </ul>
-          </div>
-          <NavLink to={'/login'} className="btn bg-[#f0845c] text-white">
-            Login
-          </NavLink>
-          
+          ) : (
+            <NavLink to="/login" className="btn bg-[#f0845c] text-white">
+              Login
+            </NavLink>
+          )}
         </div>
       </div>
     </div>

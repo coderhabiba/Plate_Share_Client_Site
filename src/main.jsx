@@ -1,6 +1,6 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
 import { createBrowserRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import Root from './layout/Root';
@@ -10,6 +10,9 @@ import AvailableFood from './components/AvailableFood/AvailableFood';
 import AddFood from './components/PrivateComponents/AddFood/AddFood';
 import MyFood from './components/PrivateComponents/MyFood/MyFood';
 import FoodReq from './components/PrivateComponents/FoodReq/FoodReq';
+import Register from './components/authentication/Register';
+import AuthProvider from './components/context/AuthProvider';
+
 
 const router = createBrowserRouter([
   {
@@ -22,7 +25,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/available-food',
-        Component: AvailableFood
+        Component: AvailableFood,
+      },
+      {
+        path: '/register',
+        Component: Register,
       },
       {
         path: '/login',
@@ -30,22 +37,24 @@ const router = createBrowserRouter([
       },
       {
         path: '/add-food',
-        element: <AddFood/>
+        element: <AddFood />,
       },
       {
         path: '/my-food',
-        element: <MyFood/>
+        element: <MyFood />,
       },
       {
         path: '/food-req',
-        element: <FoodReq/>
-      }
+        element: <FoodReq />,
+      },
     ],
   },
 ]);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );

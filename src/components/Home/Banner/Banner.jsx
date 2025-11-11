@@ -107,7 +107,7 @@ const Banner = () => {
         </button>
 
         {/* likes btn */}
-        <button className="absolute bottom-5 right-5 flex flex-col items-center justify-center bg-[#1414132d] border border-[#e0e0e0] rounded-xl lg:px-6 px-3 lg:py-4 py-2 hover:scale-[1.03] hover:shadow-md transition-all duration-500 ease-in-out">
+        <button className="absolute bottom-5 right-5 flex flex-col items-center justify-center bg-[#14141391] border border-[#e0e0e0] rounded-xl lg:px-6 px-3 lg:py-4 py-2 hover:scale-[1.03] hover:shadow-md transition-all duration-500 ease-in-out">
           <span className="text-white font-semibold lg:text-sm text-[10px]">
             ❤️ 30+ Likes This
           </span>
