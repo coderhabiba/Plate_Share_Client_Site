@@ -2,7 +2,7 @@ import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from 'react-icons/fa';
 
 const Contact = () => {
   return (
-    <div className='bg-white'>
+    <div className="">
       <div className="py-20 px-6 lg:px-20 flex flex-col lg:flex-row justify-between items-start gap-10 container mx-auto">
         {/* left side */}
         <div className="lg:w-1/2 space-y-8">
@@ -48,7 +48,7 @@ const Contact = () => {
         </div>
 
         {/* right side form */}
-        <div className="lg:w-1/2 bg-white rounded-2xl shadow-lg p-8">
+        <div className="lg:w-1/2 bg-[#F5F5F5] rounded-2xl shadow-lg p-8">
           <h3 className="text-xl font-semibold text-gray-800 mb-6">
             Get in Touch
           </h3>
