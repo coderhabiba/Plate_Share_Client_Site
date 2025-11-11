@@ -9,7 +9,7 @@ import { NavLink } from 'react-router';
 
 const Banner = () => {
   return (
-    <div className="py-28 grid lg:grid-cols-2 grid-cols-1 lg:gap-0 gap-10 container mx-auto">
+    <div className="py-28 grid lg:grid-cols-2 grid-cols-1 lg:gap-0 gap-10 max-w-[80%] mx-auto">
       <div className="banner-left lg:max-w-[90%] max-w-full">
         <h1 className="lg:text-6xl text-5xl elms-font font-bold mb-6">
           Share Meals,
@@ -22,10 +22,16 @@ const Banner = () => {
           authentic, homemade meals made with love.
         </p>
         <div className="flex gap-5">
-          <NavLink to={"/available-food"} className="btn bg-[#f0845c] text-white hover:scale-105 transition-all ease-in-out hover:shadow-2xl shadow-2xl shadow-[#817e7e] elms-font">
+          <NavLink
+            to={'/available-food'}
+            className="btn bg-[#f0845c] text-white hover:scale-105 transition-all ease-in-out hover:shadow-2xl shadow-2xl shadow-[#817e7e] elms-font"
+          >
             View All Foods <FaArrowRightLong />
           </NavLink>
-          <NavLink to={"/add-food"} className="btn bg-[#f5f5f5] shadow-2xl hover:scale-105 transition-all ease-in-out hover:shadow-2xl shadow-[#817e7e] hover:border-[#F0845C] hover:text-gray-500 elms-font">
+          <NavLink
+            to={'/add-food'}
+            className="btn bg-[#f5f5f5] shadow-2xl hover:scale-105 transition-all ease-in-out hover:shadow-2xl shadow-[#817e7e] hover:border-[#F0845C] hover:text-gray-500 elms-font"
+          >
             Add Food
           </NavLink>
         </div>
@@ -78,35 +84,34 @@ const Banner = () => {
       </div>
 
       <div className="relative h-[503px] banner-right rounded-2xl bg-[url('https://i.ibb.co.com/9HK2dHC2/banner.jpg')] bg-cover">
-        <button className="absolute bg-[#fd7d056c] top-5 left-5 btn flex items-center gap-2 text-left py-8 px-4 rounded-xl border border-[#e0e0e0] hover:scale-[1.03] transition-all duration-500 ease-in-out">
-          {/* Avatar Circle */}
-          <div className="flex items-center justify-center rounded-full bg-[#f0845c] text-white font-bold border border-[#f0845c] w-10 h-10 shadow-sm">
+        <button className="absolute bg-[#fd7d056c] top-5 left-5 btn flex items-center gap-2 text-left lg:py-8 py-4 lg:px-4 px-2 rounded-xl border border-[#e0e0e0] hover:scale-[1.03] transition-all duration-500 ease-in-out">
+          <div className="flex items-center justify-center rounded-full bg-[#f0845c] text-white font-bold border border-[#f0845c] lg:w-10 w-7 lg:h-10 h-7 shadow-sm">
             AK
           </div>
           <div>
-            <p className="font-semibold text-[#0e0d0d]">AK Ai Kong</p>
-            <p className="text-sm text-gray-50">Shared a new recipe</p>
+            <p className="font-semibold text-[#0e0d0d] lg:text-sm text-xs">AK Ai Kong</p>
+            <p className="lg:text-sm text-[10px] text-gray-50">Shared a new recipe</p>
           </div>
         </button>
 
-        {/* Rating Button */}
-        <button className="absolute top-5 right-5 flex flex-col items-center justify-center bg-transparent border border-[#e0e0e0] rounded-xl px-6 py-4 hover:scale-[1.03] hover:shadow-md transition-all duration-500 ease-in-out">
+        {/* rating btn */}
+        <button className="absolute top-5 right-5 flex flex-col items-center justify-center bg-transparent border border-[#e0e0e0] rounded-xl lg:px-6 px-3 lg:py-4 py-2 hover:scale-[1.03] hover:shadow-md transition-all duration-500 ease-in-out">
           <div className="flex gap-1 mb-2">
-            <FaStar className="text-[#f0845c] text-lg transition-transform duration-500 ease-in-out group-hover:scale-110" />
-            <FaStar className="text-[#f0845c] text-lg transition-transform duration-500 ease-in-out group-hover:scale-110" />
-            <FaStar className="text-[#f0845c] text-lg transition-transform duration-500 ease-in-out group-hover:scale-110" />
-            <FaStar className="text-[#f0845c] text-lg transition-transform duration-500 ease-in-out group-hover:scale-110" />
-            <FaStar className="text-[#f0845c] text-lg transition-transform duration-500 ease-in-out group-hover:scale-110" />
+            <FaStar className="text-[#f0845c] lg:text-lg text-xs transition-transform duration-500 ease-in-out group-hover:scale-110" />
+            <FaStar className="text-[#f0845c] lg:text-lg text-xs transition-transform duration-500 ease-in-out group-hover:scale-110" />
+            <FaStar className="text-[#f0845c] lg:text-lg text-xs transition-transform duration-500 ease-in-out group-hover:scale-110" />
+            <FaStar className="text-[#f0845c] lg:text-lg text-xs transition-transform duration-500 ease-in-out group-hover:scale-110" />
+            <FaStar className="text-[#f0845c] lg:text-lg text-xs transition-transform duration-500 ease-in-out group-hover:scale-110" />
           </div>
-          <span className="font-semibold text-[#f3f3f3fa]">Perfect!</span>
+          <span className="font-semibold text-[#f3f3f3fa] lg:text-xs text-[8px]">Perfect!</span>
         </button>
 
-        {/* Likes Button */}
-        <button className="absolute bottom-5 right-5 flex flex-col items-center justify-center bg-[#1414132d] border border-[#e0e0e0] rounded-xl px-6 py-4 hover:scale-[1.03] hover:shadow-md transition-all duration-500 ease-in-out">
-          <span className="text-white font-semibold text-sm">
+        {/* likes btn */}
+        <button className="absolute bottom-5 right-5 flex flex-col items-center justify-center bg-[#1414132d] border border-[#e0e0e0] rounded-xl lg:px-6 px-3 lg:py-4 py-2 hover:scale-[1.03] hover:shadow-md transition-all duration-500 ease-in-out">
+          <span className="text-white font-semibold lg:text-sm text-[10px]">
             ❤️ 30+ Likes This
           </span>
-          <p className="text-[#0c0500f8] text-xs mt-1">Recipe rocks!</p>
+          <p className="text-[#35f705fd] lg:text-xs text-[8px] mt-1">Recipe rocks!</p>
         </button>
       </div>
     </div>

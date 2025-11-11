@@ -33,7 +33,7 @@ const HowItWork = () => {
           <h2 className="text-4xl font-extrabold bg-linear-to-r from-[#677374] to-[#307A7F] bg-clip-text text-transparent">
             How It Works
           </h2>
-          <p className="mt-3 text-base text-zinc-600 dark:text-zinc-400">
+          <p className="mt-3 text-base text-zinc-400">
             Getting started with Plate Share is simple and straight forward
           </p>
         </div>

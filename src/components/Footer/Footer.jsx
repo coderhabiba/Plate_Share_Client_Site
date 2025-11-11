@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <div className='relative bg-[url("https://i.ibb.co.com/C5cFCB5D/footer.jpg")] bg-no-repeat bg-cover pt-10 pb-8'>
       <div class="absolute inset-0 bg-white/85"></div>
-      <div className="relative z-10 container mx-auto flex lg:flex-row flex-col justify-between items-start lg:gap-0 gap-10">
+      <div className="relative z-10 max-w-[80%] mx-auto flex lg:flex-row flex-col justify-between items-start lg:gap-0 gap-10">
         {/* logo and links */}
         <div className="logo-links">
           <div>

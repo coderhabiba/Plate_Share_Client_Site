@@ -13,7 +13,7 @@ const Navbar = () => {
   );
   return (
     <div className="shadow-sm">
-      <div className="navbar container mx-auto items-center">
+      <div className="navbar max-w-[81%] mx-auto items-center">
         <div className="navbar-start items-center justify-between lg:justify-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
