@@ -1,11 +1,15 @@
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
-import { useState } from "react";
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import { useState } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
 
-const FoodReqModal = (
-  { foodId, foodName, donator, showModal, setShowModal }
-) => {
+const FoodReqModal = ({
+  foodId,
+  foodName,
+  donator,
+  showModal,
+  setShowModal,
+}) => {
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +22,7 @@ const FoodReqModal = (
     const form = e.target;
     const requestData = {
       foodId,
-      foodName, 
+      foodName,
       requesterEmail: user.email,
       name: user.displayName || user.name || 'Anonymous',
       photoURL: user.photoURL || 'https://i.ibb.co/8LQPQJ6s/user.png',
@@ -32,11 +36,14 @@ const FoodReqModal = (
     };
 
     try {
-      const res = await fetch('http://localhost:3000/food-request', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestData),
-      });
+      const res = await fetch(
+        'https://plate-share-server-site.vercel.app/food-request',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestData),
+        }
+      );
       if (res.ok) {
         toast.success('Request submitted!');
         form.reset();

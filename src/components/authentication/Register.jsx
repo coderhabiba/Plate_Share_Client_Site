@@ -39,11 +39,14 @@ const Register = () => {
 
     try {
       await createUser(email, password);
-      const res = await fetch('http://localhost:3000/users', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(newUser),
-      });
+      const res = await fetch(
+        'https://plate-share-server-site.vercel.app/users',
+        {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(newUser),
+        }
+      );
       if (res.ok) {
         toast.success('Registration successful!');
         form.reset();
@@ -52,7 +55,7 @@ const Register = () => {
         toast.error('Failed to save user in database.');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toast.error('Registration failed. Try again.');
     }
   };
@@ -60,15 +63,15 @@ const Register = () => {
   const handleGoogleLogin = async () => {
     try {
       const result = await googleLogin();
-      console.log(result);
+      // console.log(result);
       setTimeout(() => navigate('/'), 1500);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen py-20 flex items-center justify-center px-4">
       <Toaster position="top-center" />
       <div className="w-full max-w-md rounded-2xl bg-transparent p-8 shadow-lg ring-1 ring-[#f0845c]/20">
         <h2 className="text-2xl font-semibold text-center text-[#F0845C] mb-6">

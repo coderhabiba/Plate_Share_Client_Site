@@ -13,7 +13,7 @@ const FoodReq = () => {
     const fetchMyRequests = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/my-request/${user.email}`
+          `https://plate-share-server-site.vercel.app/my-request/${user.email}`
         );
         if (!res.ok) throw new Error('Failed to fetch requests');
         const data = await res.json();
@@ -51,9 +51,12 @@ const FoodReq = () => {
     if (!result.isConfirmed) return;
 
     try {
-      const res = await fetch(`http://localhost:3000/food-request/${id}`, {
-        method: 'DELETE',
-      });
+      const res = await fetch(
+        `https://plate-share-server-site.vercel.app/food-request/${id}`,
+        {
+          method: 'DELETE',
+        }
+      );
       if (!res.ok) throw new Error('Failed to delete request');
 
       setRequests(prev => prev.filter(req => req._id !== id));

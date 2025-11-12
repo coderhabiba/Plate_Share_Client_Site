@@ -9,25 +9,22 @@ const FeaturedFood = () => {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const res = await fetch('http://localhost:3000/foods');
+        const res = await fetch(
+          'https://plate-share-server-site.vercel.app/foods'
+        );
         const data = await res.json();
 
         const sortedFoods = data
           .sort((a, b) => {
-            const aQty = parseInt(a.foodQuantity.match(/\d+/)?.[0] || 0);
-            const bQty = parseInt(b.foodQuantity.match(/\d+/)?.[0] || 0);
-            return bQty - aQty;
+            return b.foodQuantity - a.foodQuantity;
           })
           .slice(0, 6);
-
         setFoods(sortedFoods);
       } catch (err) {
         console.error('Failed to fetch foods:', err);
-      } finally {
-        setLoading(false);
       }
+      setLoading(false);
     };
-
     fetchFoods();
   }, []);
 
@@ -73,9 +70,11 @@ const FeaturedFood = () => {
                     <h3 className="text-2xl font-bold text-gray-800">
                       {food.foodName}
                     </h3>
-                    <p className="text-gray-600 mt-2">{food.foodQuantity}</p>
+                    <p className="text-gray-600 mt-2">
+                      <strong>Qty : </strong> {food.foodQuantityNumber}
+                    </p>
                     <p className="text-gray-600 mt-1">
-                      <span className="font-semibold">Pickup:</span>{' '}
+                      <span className="font-semibold">Pickup :</span>{' '}
                       {food.pickupLocation}
                     </p>
                     {food.notes && (

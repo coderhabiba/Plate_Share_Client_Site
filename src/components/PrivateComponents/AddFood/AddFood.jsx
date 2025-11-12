@@ -13,7 +13,8 @@ const AddFood = () => {
     const form = e.target;
     const foodName = form.foodName.value;
     const foodImage = form.foodImage.value;
-    const foodQuantity = form.foodQuantity.value;
+    const foodQuantityString = form.foodQuantity.value;
+    const foodQuantityNumber = parseInt(foodQuantityString);
     const pickupLocation = form.pickupLocation.value;
     const expireDate = form.expireDate.value;
     const notes = form.notes.value;
@@ -22,24 +23,27 @@ const AddFood = () => {
       const newFood = {
         foodName,
         foodImage,
-        foodQuantity,
+        foodQuantityNumber,
         pickupLocation,
         expireDate,
         notes,
         donator: {
           name: user?.displayName || user?.name || 'Unknown Donator',
-          email: user?.email || "Unknown Email",
+          email: user?.email || 'Unknown Email',
           photoURL: user?.photoURL || 'https://i.ibb.co.com/8LQPQJ6s/user.png',
         },
         food_status: 'Available',
         createdAt: new Date().toISOString(),
       };
-      console.log(newFood);
-      const res = await fetch('http://localhost:3000/foods', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(newFood),
-      });
+      // console.log(newFood);
+      const res = await fetch(
+        'https://plate-share-server-site.vercel.app/foods',
+        {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(newFood),
+        }
+      );
 
       if (res.ok) {
         toast.success('Food added successfully!');
@@ -92,7 +96,7 @@ const AddFood = () => {
               Food Quantity
             </label>
             <input
-              type="text"
+              type="number"
               name="foodQuantity"
               placeholder="Serves 2 people"
               required

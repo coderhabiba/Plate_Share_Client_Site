@@ -13,7 +13,6 @@ const FoodDetails = () => {
   const [showModal, setShowModal] = useState(false);
   const [requests, setRequests] = useState([]);
 
-
   useEffect(() => {
     if (!loading && !user) {
       navigate('/login');
@@ -24,7 +23,9 @@ const FoodDetails = () => {
 
     const fetchFoodDetails = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/foods/${id}`);
+        const res = await fetch(
+          `https://plate-share-server-site.vercel.app/foods/${id}`
+        );
         if (!res.ok) throw new Error('Failed to fetch food details');
         const data = await res.json();
         setFood(data);
@@ -35,7 +36,7 @@ const FoodDetails = () => {
           user.email === data.donator.email
         ) {
           const reqRes = await fetch(
-            `http://localhost:3000/food-request/${id}`
+            `https://plate-share-server-site.vercel.app/food-request/${id}`
           );
           if (!reqRes.ok) throw new Error('Failed to fetch requests');
           const reqData = await reqRes.json();
@@ -52,11 +53,10 @@ const FoodDetails = () => {
     fetchFoodDetails();
   }, [user, loading, id, navigate]);
 
-
   const handleAcceptReject = async (requestId, action) => {
     try {
       const res = await fetch(
-        `http://localhost:3000/food-request/${requestId}`,
+        `https://plate-share-server-site.vercel.app/food-request/${requestId}`,
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -110,7 +110,7 @@ const FoodDetails = () => {
             {food.foodName}
           </h2>
           <p>
-            <strong>Quantity:</strong> {food.foodQuantity}
+            <strong>Quantity:</strong> {food.foodQuantityNumber}
           </p>
           <p>
             <strong>Pickup Location:</strong> {food.pickupLocation}
@@ -137,7 +137,10 @@ const FoodDetails = () => {
           </div>
 
           {user && food && food.donator && user.email !== food.donator.email ? (
-            <button onClick={() => setShowModal(true)} className="mt-5 btn ...">
+            <button
+              onClick={() => setShowModal(true)}
+              className="mt-5 bg-[#F0845C] text-white px-4 py-2 rounded-full hover:bg-[#e5734c]"
+            >
               Request Food
             </button>
           ) : null}
@@ -200,8 +203,8 @@ const FoodDetails = () => {
       {showModal && (
         <FoodReqModal
           foodId={food._id}
-          foodName={food.foodName} 
-          donator={food.donator} 
+          foodName={food.foodName}
+          donator={food.donator}
           showModal={showModal}
           setShowModal={setShowModal}
         />

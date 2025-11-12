@@ -16,7 +16,9 @@ const MyFood = () => {
       return;
     }
 
-    fetch(`http://localhost:3000/foods?donatorEmail=${user?.email}`)
+    fetch(
+      `https://plate-share-server-site.vercel.app/foods?donatorEmail=${user?.email}`
+    )
       .then(res => res.json())
       .then(data => {
         setFoods(data);
@@ -40,7 +42,7 @@ const MyFood = () => {
       confirmButtonText: 'Yes, delete it!',
     }).then(result => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/foods/${id}`, {
+        fetch(`https://plate-share-server-site.vercel.app/foods/${id}`, {
           method: 'DELETE',
         })
           .then(res => res.json())
@@ -95,7 +97,7 @@ const MyFood = () => {
                     />
                   </td>
                   <td>{food.foodName}</td>
-                  <td>{food.foodQuantity}</td>
+                  <td>{food.foodQuantityNumber}</td>
                   <td>{food.pickupLocation}</td>
                   <td>{new Date(food.expireDate).toLocaleDateString()}</td>
                   <td className="flex gap-2">

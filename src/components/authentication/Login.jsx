@@ -21,7 +21,7 @@ const Login = () => {
       form.reset();
       setTimeout(() => navigate('/'), 1500);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -30,7 +30,7 @@ const Login = () => {
       await googleLogin();
       setTimeout(() => navigate('/'), 1500);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

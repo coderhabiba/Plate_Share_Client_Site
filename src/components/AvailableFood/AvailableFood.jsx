@@ -12,7 +12,9 @@ const AvailableFood = () => {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const res = await fetch('http://localhost:3000/foods');
+        const res = await fetch(
+          'https://plate-share-server-site.vercel.app/foods'
+        );
         const data = await res.json();
         const availableFoods = data.filter(
           food => food.food_status?.toLowerCase() === 'available'
@@ -64,7 +66,7 @@ const AvailableFood = () => {
                 <img
                   src={food.foodImage}
                   alt={food.foodName}
-                  className="w-full h-60 object-cover transition-transform duration-700 group-hover:scale-x-[-1]"
+                  className="w-full h-60 object-cover transition-transform duration-700 group-hover:-scale-x-100"
                 />
                 <span className="absolute top-3 left-3 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-md">
                   Available
@@ -90,7 +92,7 @@ const AvailableFood = () => {
                   </span>
                 </div>
                 <p className="text-sm">
-                  <strong>Quantity:</strong> {food.foodQuantity}
+                  <strong>Quantity:</strong> {food.foodQuantityNumber}
                 </p>
                 <p className="text-sm">
                   <strong>Pickup:</strong> {food.pickupLocation}

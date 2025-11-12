@@ -14,7 +14,7 @@ const UpdateFood = () => {
 
   useEffect(() => {
     if (!user) return;
-    fetch(`http://localhost:3000/foods/${id}`)
+    fetch(`https://plate-share-server-site.vercel.app/foods/${id}`)
       .then(res => res.json())
       .then(data => {
         if (data.donator?.email !== user?.email) {
@@ -40,18 +40,21 @@ const UpdateFood = () => {
     const updatedFood = {
       foodName: form.foodName.value,
       foodImage: form.foodImage.value,
-      foodQuantity: form.foodQuantity.value,
+      foodQuantity: parseInt(form.foodQuantity.value),
       pickupLocation: form.pickupLocation.value,
       expireDate: form.expireDate.value,
       notes: form.notes.value,
     };
 
     try {
-      const res = await fetch(`http://localhost:3000/foods/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedFood),
-      });
+      const res = await fetch(
+        `https://plate-share-server-site.vercel.app/foods/${id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedFood),
+        }
+      );
 
       if (res.ok) {
         toast.success('Food updated successfully!');
@@ -113,9 +116,9 @@ const UpdateFood = () => {
               Food Quantity
             </label>
             <input
-              type="text"
+              type="number"
               name="foodQuantity"
-              defaultValue={food.foodQuantity}
+              defaultValue={food.foodQuantityNumber}
               required
               className="mt-1 w-full border border-gray-300 px-3 py-2 rounded-md outline-none focus:border-[#F0845C] focus:ring-[#F0845C]"
             />
