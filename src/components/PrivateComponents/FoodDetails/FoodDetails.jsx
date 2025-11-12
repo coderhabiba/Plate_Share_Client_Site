@@ -72,8 +72,17 @@ const FoodDetails = () => {
           )
         );
         if (action === 'accepted') {
+          await fetch(
+            `https://plate-share-server-site.vercel.app/foods/${food._id}`,
+            {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ food_status: 'donated' }),
+            }
+          );
           setFood(prev => ({ ...prev, food_status: 'donated' }));
         }
+
       } else {
         toast.error('Failed to update request');
       }
