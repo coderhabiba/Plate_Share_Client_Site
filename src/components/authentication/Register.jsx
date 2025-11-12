@@ -57,15 +57,15 @@ const Register = () => {
     }
   };
 
-   const handleGoogleLogin = async () => {
-     try {
-       const result = await googleLogin();
-       console.log(result);
-       setTimeout(() => navigate('/'), 1500);
-     } catch (error) {
-       console.log(error);
-     }
-   };
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await googleLogin();
+      console.log(result);
+      setTimeout(() => navigate('/'), 1500);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">

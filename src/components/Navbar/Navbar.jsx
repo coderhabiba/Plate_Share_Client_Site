@@ -6,7 +6,12 @@ const Navbar = () => {
   const { logOut, user } = useContext(AuthContext);
   const location = useLocation();
 
-  const isAuthPage = ['/login', '/register'].includes(location.pathname);
+  const isAuthPage = [
+    '/login',
+    '/register',
+    '/add-food',
+    '/update-food',
+  ].includes(location.pathname);
 
   const links = (
     <>
@@ -26,7 +31,6 @@ const Navbar = () => {
       }`}
     >
       <div className="navbar max-w-[81%] mx-auto items-center">
-        {/* Left side */}
         <div className="navbar-start items-center justify-between lg:justify-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -65,12 +69,10 @@ const Navbar = () => {
           </a>
         </div>
 
-        {/* Middle */}
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
 
-        {/* Right side */}
         <div className="navbar-end gap-5">
           {user ? (
             <div className="dropdown dropdown-end">
@@ -81,10 +83,9 @@ const Navbar = () => {
               >
                 <div className="w-10 rounded-full">
                   <img
-                    alt="User avatar"
+                    alt="avatar"
                     src={
-                      user.photoURL ||
-                      'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+                      user?.photoURL || 'https://i.ibb.co.com/8LQPQJ6s/user.png'
                     }
                   />
                 </div>

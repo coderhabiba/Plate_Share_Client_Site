@@ -1,4 +1,3 @@
-
 const Community = () => {
   return (
     <div className="bg-linear-to-r from-teal-700 via-gray-600 to-orange-500 text-white py-16 px-6 text-center">

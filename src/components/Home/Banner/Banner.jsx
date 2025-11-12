@@ -6,7 +6,6 @@ import { FaRegStar } from 'react-icons/fa';
 import { FaStar } from 'react-icons/fa6';
 import { NavLink } from 'react-router';
 
-
 const Banner = () => {
   return (
     <div className="py-28 grid lg:grid-cols-2 grid-cols-1 lg:gap-0 gap-10 max-w-[80%] mx-auto">
@@ -89,8 +88,12 @@ const Banner = () => {
             AK
           </div>
           <div>
-            <p className="font-semibold text-[#0e0d0d] lg:text-sm text-xs">AK Ai Kong</p>
-            <p className="lg:text-sm text-[10px] text-gray-50">Shared a new recipe</p>
+            <p className="font-semibold text-[#0e0d0d] lg:text-sm text-xs">
+              AK Ai Kong
+            </p>
+            <p className="lg:text-sm text-[10px] text-gray-50">
+              Shared a new recipe
+            </p>
           </div>
         </button>
 
@@ -103,7 +106,9 @@ const Banner = () => {
             <FaStar className="text-[#f0845c] lg:text-lg text-xs transition-transform duration-500 ease-in-out group-hover:scale-110" />
             <FaStar className="text-[#f0845c] lg:text-lg text-xs transition-transform duration-500 ease-in-out group-hover:scale-110" />
           </div>
-          <span className="font-semibold text-[#f3f3f3fa] lg:text-xs text-[8px]">Perfect!</span>
+          <span className="font-semibold text-[#f3f3f3fa] lg:text-xs text-[8px]">
+            Perfect!
+          </span>
         </button>
 
         {/* likes btn */}
@@ -111,7 +116,9 @@ const Banner = () => {
           <span className="text-white font-semibold lg:text-sm text-[10px]">
             ❤️ 30+ Likes This
           </span>
-          <p className="text-[#35f705fd] lg:text-xs text-[8px] mt-1">Recipe rocks!</p>
+          <p className="text-[#35f705fd] lg:text-xs text-[8px] mt-1">
+            Recipe rocks!
+          </p>
         </button>
       </div>
     </div>

@@ -1,66 +1,86 @@
-import { useContext, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import toast, { Toaster } from 'react-hot-toast';
 
-const AddFood = () => {
+const UpdateFood = () => {
+  const { id } = useParams();
   const { user } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const [food, setFood] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    fetch(`http://localhost:3000/foods/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.donator?.email !== user?.email) {
+          toast.error('You are not authorized to update this food.');
+          navigate('/my-food');
+          return;
+        }
+        setFood(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        toast.error('Failed to fetch food data.');
+        setLoading(false);
+      });
+  }, []);
 
   const handleSubmit = async e => {
     e.preventDefault();
-    setLoading(true);
+    setUpdating(true);
 
     const form = e.target;
-    const foodName = form.foodName.value;
-    const foodImage = form.foodImage.value;
-    const foodQuantity = form.foodQuantity.value;
-    const pickupLocation = form.pickupLocation.value;
-    const expireDate = form.expireDate.value;
-    const notes = form.notes.value;
+    const updatedFood = {
+      foodName: form.foodName.value,
+      foodImage: form.foodImage.value,
+      foodQuantity: form.foodQuantity.value,
+      pickupLocation: form.pickupLocation.value,
+      expireDate: form.expireDate.value,
+      notes: form.notes.value,
+    };
 
     try {
-      const newFood = {
-        foodName,
-        foodImage,
-        foodQuantity,
-        pickupLocation,
-        expireDate,
-        notes,
-        donator: {
-          name: user?.displayName || user?.name || 'Unknown Donator',
-          email: user?.email || "Unknown Email",
-          photoURL: user?.photoURL || 'https://i.ibb.co.com/8LQPQJ6s/user.png',
-        },
-        food_status: 'Available',
-        createdAt: new Date().toISOString(),
-      };
-      console.log(newFood);
-      const res = await fetch('http://localhost:3000/foods', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(newFood),
+      const res = await fetch(`http://localhost:3000/foods/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedFood),
       });
 
       if (res.ok) {
-        toast.success('Food added successfully!');
-        form.reset();
+        toast.success('Food updated successfully!');
+        navigate('/my-food');
       } else {
-        toast.error('Failed to add food. Try again.');
+        toast.error('Failed to update food.');
       }
     } catch (error) {
       console.error(error);
       toast.error('Something went wrong!');
     }
-    setLoading(false);
+    setUpdating(false);
   };
 
+  if (loading || !food)
+    return (
+      <div className="flex justify-center items-center mt-20">
+        <span className="loading loading-spinner text-[#F0845C] loading-lg"></span>
+      </div>
+    );
+
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[#FFF5F2]">
+    <div className="min-h-screen flex items-center justify-center px-4 my-20">
       <Toaster position="top-center" />
-      <div className="w-full my-20 max-w-lg rounded-2xl bg-white p-8 shadow-lg">
+      <div className="w-full max-w-lg rounded-2xl bg-transparent p-8 shadow-lg">
         <h2 className="text-2xl font-semibold text-center text-[#F0845C] mb-6">
-          Add Food
+          Update Food
         </h2>
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -69,6 +89,7 @@ const AddFood = () => {
             <input
               type="text"
               name="foodName"
+              defaultValue={food.foodName}
               required
               className="mt-1 w-full border border-gray-300 px-3 py-2 rounded-md outline-none focus:border-[#F0845C] focus:ring-[#F0845C]"
             />
@@ -81,7 +102,7 @@ const AddFood = () => {
             <input
               type="text"
               name="foodImage"
-              placeholder="https://example.com/image.jpg"
+              defaultValue={food.foodImage}
               required
               className="mt-1 w-full border border-gray-300 px-3 py-2 rounded-md outline-none focus:border-[#F0845C] focus:ring-[#F0845C]"
             />
@@ -94,7 +115,7 @@ const AddFood = () => {
             <input
               type="text"
               name="foodQuantity"
-              placeholder="Serves 2 people"
+              defaultValue={food.foodQuantity}
               required
               className="mt-1 w-full border border-gray-300 px-3 py-2 rounded-md outline-none focus:border-[#F0845C] focus:ring-[#F0845C]"
             />
@@ -107,6 +128,7 @@ const AddFood = () => {
             <input
               type="text"
               name="pickupLocation"
+              defaultValue={food.pickupLocation}
               required
               className="mt-1 w-full border border-gray-300 px-3 py-2 rounded-md outline-none focus:border-[#F0845C] focus:ring-[#F0845C]"
             />
@@ -119,6 +141,7 @@ const AddFood = () => {
             <input
               type="date"
               name="expireDate"
+              defaultValue={food.expireDate.split('T')[0]}
               required
               className="mt-1 w-full border border-gray-300 px-3 py-2 rounded-md outline-none focus:border-[#F0845C] focus:ring-[#F0845C]"
             />
@@ -130,17 +153,17 @@ const AddFood = () => {
             </label>
             <textarea
               name="notes"
-              placeholder="Any extra info..."
+              defaultValue={food.notes}
               className="mt-1 w-full border border-gray-300 px-3 py-2 rounded-md outline-none focus:border-[#F0845C] focus:ring-[#F0845C]"
             />
           </div>
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={updating}
             className="w-full bg-[#F0845C] py-2 text-white font-medium rounded-md hover:bg-[#e5734c] transition disabled:opacity-70"
           >
-            {loading ? 'Adding...' : 'Add Food'}
+            {updating ? 'Updating...' : 'Update Food'}
           </button>
         </form>
       </div>
@@ -148,4 +171,4 @@ const AddFood = () => {
   );
 };
 
-export default AddFood;
+export default UpdateFood;
