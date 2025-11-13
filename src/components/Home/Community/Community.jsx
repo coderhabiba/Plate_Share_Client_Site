@@ -1,6 +1,14 @@
+import { motion } from 'framer-motion';
+
 const Community = () => {
   return (
-    <div className="bg-linear-to-r from-teal-700 via-gray-600 to-orange-500 text-white py-16 px-6 text-center">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: false, amount: 0.3 }}
+      transition={{ duration: 0.8, ease: 'easeOut' }}
+      className="bg-linear-to-r from-teal-700 via-gray-600 to-orange-500 text-white py-16 px-6 text-center"
+    >
       <h2 className="text-3xl md:text-4xl font-bold mb-4">
         Ready to Join Our Community?
       </h2>
@@ -17,7 +25,7 @@ const Community = () => {
           Learn More
         </button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

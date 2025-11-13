@@ -1,11 +1,23 @@
+import { useEffect } from 'react';
 import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from 'react-icons/fa';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const Contact = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 800, // animation duration
+      once: false, 
+      mirror: true,
+      easing: 'ease-in-out',
+    });
+  }, []);
+
   return (
-    <div className="">
+    <div>
       <div className="py-20 flex flex-col lg:flex-row justify-between items-start gap-10 max-w-[80%] mx-auto">
         {/* left side */}
-        <div className="lg:w-1/2 space-y-8">
+        <div className="lg:w-1/2 space-y-8" data-aos="fade-right">
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
               Get in Touch
@@ -26,7 +38,7 @@ const Contact = () => {
               </li>
               <li className="flex items-center gap-3">
                 <FaMapMarkerAlt className="text-[#f0845c] text-lg" />
-                Mymensingh,Bangladesh
+                Mymensingh, Bangladesh
               </li>
               <li className="flex items-center gap-3">
                 <FaPhoneAlt className="text-[#f0845c] text-lg" />
@@ -48,7 +60,10 @@ const Contact = () => {
         </div>
 
         {/* right side form */}
-        <div className="lg:w-1/2 bg-[#F5F5F5] rounded-2xl shadow-lg p-8">
+        <div
+          className="lg:w-1/2 bg-[#F5F5F5] rounded-2xl shadow-lg p-8"
+          data-aos="fade-left"
+        >
           <h3 className="text-xl font-semibold text-gray-800 mb-6">
             Get in Touch
           </h3>

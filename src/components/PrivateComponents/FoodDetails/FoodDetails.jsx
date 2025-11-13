@@ -76,13 +76,12 @@ const FoodDetails = () => {
             `https://plate-share-server-site.vercel.app/foods/${food._id}`,
             {
               method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 'content-type': 'application/json' },
               body: JSON.stringify({ food_status: 'donated' }),
             }
           );
           setFood(prev => ({ ...prev, food_status: 'donated' }));
         }
-
       } else {
         toast.error('Failed to update request');
       }
@@ -131,15 +130,17 @@ const FoodDetails = () => {
           <p>
             <strong>Notes:</strong> {food.notes || 'N/A'}
           </p>
-          <div className="mt-3 flex items-center gap-3">
-            <img
-              src={food.donator?.photoURL}
-              alt={food.donator?.name}
-              className="w-12 h-12 rounded-full"
-            />
-            <p>
-              <strong>Donator Name:</strong> {food?.donator?.name}
-            </p>
+          <div className='mt-3 flex md:flex-row flex-col items-center gap-3'>
+            <div className="flex items-center gap-2">
+              <img
+                src={food.donator?.photoURL}
+                alt={food.donator?.name}
+                className="w-12 h-12 rounded-full"
+              />
+              <p>
+                <strong>Donator Name:</strong> {food?.donator?.name}
+              </p>
+            </div>
             <p>
               <strong>Donator Email:</strong> {food?.donator?.email}
             </p>

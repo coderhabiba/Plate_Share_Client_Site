@@ -16,6 +16,7 @@ import FoodDetails from './components/PrivateComponents/FoodDetails/FoodDetails'
 import UpdateFood from './components/PrivateComponents/UpdateFood/UpdateFood';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import ErrorPage from './components/ErrorPage/ErrorPage';
+import 'aos/dist/aos.css';
 
 
 const router = createBrowserRouter([

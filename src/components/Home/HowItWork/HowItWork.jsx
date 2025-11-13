@@ -1,6 +1,7 @@
 import { IoSearch } from 'react-icons/io5';
 import { RiShoppingCartLine } from 'react-icons/ri';
 import { FiCodesandbox } from 'react-icons/fi';
+import { motion } from 'framer-motion';
 
 const steps = [
   {
@@ -19,6 +20,15 @@ const steps = [
     icon: <FiCodesandbox className="text-3xl" />,
   },
 ];
+
+const cardVariants = {
+  offscreen: { y: 50, opacity: 0 },
+  onscreen: {
+    y: 0,
+    opacity: 1,
+    transition: { type: 'spring', bounce: 0.2, duration: 0.8 },
+  },
+};
 
 const HowItWork = () => {
   return (
@@ -40,7 +50,14 @@ const HowItWork = () => {
 
         <div className="mt-12 grid grid-cols-1 gap-6 md:mt-16 md:grid-cols-3">
           {steps.map((step, index) => (
-            <div key={index} className="relative flex-1">
+            <motion.div
+              key={index}
+              initial="offscreen"
+              whileInView="onscreen"
+              viewport={{ once: false, amount: 0.3 }}
+              variants={cardVariants}
+              className="relative flex-1"
+            >
               {index < steps.length - 1 && (
                 <div
                   aria-hidden
@@ -66,7 +83,7 @@ const HowItWork = () => {
                   {step.text}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
