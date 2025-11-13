@@ -2,7 +2,7 @@
 
 ## 🔗 Live Site URL (Client Side)
 
-**Live Site URL here:** `[YOUR_LIVE_SITE_URL]`
+**Live Site URL here:** `https://plate-share-web.netlify.app`
 
 ---
 
@@ -24,7 +24,7 @@ This platform is built using a combination of modern and powerful technologies:
 
 | Category | Technology Used |
 | :--- | :--- |
-| **Frontend (Client)** | **React** (JavaScript Library), **Tailwind CSS** (Styling) |
-| **Backend (Server)** | **Node.js** and **Express.js** (Runtime & Framework) |
-| **Database** | **MongoDB** (NoSQL Database) |
-| **Authentication** | **Firebase** (Authentication Service) |
+| **Frontend (Client)** | **React** , **Tailwind CSS**, **AOS**, **Framer motion** |
+| **Backend (Server)** | **Node.js** and **Express.js** |
+| **Database** | **MongoDB** |
+| **Authentication** | **Firebase** |
