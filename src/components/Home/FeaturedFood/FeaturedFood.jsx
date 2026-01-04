@@ -5,6 +5,7 @@ import 'aos/dist/aos.css';
 
 const FeaturedFood = () => {
   const [foods, setFoods] = useState([]);
+  const [allFoodsCount, setAllFoodsCount] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -25,9 +26,19 @@ const FeaturedFood = () => {
         );
         const data = await res.json();
 
+        setAllFoodsCount(data);
+
         const sortedFoods = data
-          .filter(food => food.food_status === 'available')
-          .sort((a, b) => b.foodQuantity - a.foodQuantity)
+          .filter(
+            food =>
+              food.food_status?.toLowerCase() === 'available' &&
+              food.foodQuantityNumber > 0
+          )
+          .sort((a, b) => {
+            const qtyA = parseInt(a.foodQuantityNumber) || 0;
+            const qtyB = parseInt(b.foodQuantityNumber) || 0;
+            return qtyB - qtyA;
+          })
           .slice(0, 6);
         setFoods(sortedFoods);
 
@@ -41,6 +52,19 @@ const FeaturedFood = () => {
     };
     fetchFoods();
   }, []);
+
+  //
+  const donatedCount = allFoodsCount.filter(
+    f => f.food_status === 'donated'
+  ).length;
+  const availableCount = allFoodsCount.filter(
+    f => f.food_status === 'available'
+  ).length;
+
+  // 
+  const activeDonors = [
+    ...new Set(allFoodsCount.map(f => f.donator?.email)),
+  ].filter(Boolean).length;
 
   if (loading)
     return (
@@ -118,6 +142,27 @@ const FeaturedFood = () => {
           >
             Show All
           </button>
+        </div>
+      </div>
+
+      {/* Impact Statistics Section */}
+      <div className="max-w-[80%] mx-auto mb-16 grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+        <div className="bg-transparent p-6 rounded-2xl shadow-2xl border-t-4 border-[#F0845C] text-center">
+          <h4 className="text-gray-500 font-medium">Total Shared</h4>
+          <p className="text-4xl font-bold text-[#F0845C]">{donatedCount}+</p>
+          <p className="text-sm text-gray-400">Meals successfully delivered</p>
+        </div>
+
+        <div className="bg-transparent p-6 rounded-2xl shadow-2xl border-t-4 border-[#307A7F] text-center">
+          <h4 className="text-gray-500 font-medium">Currently Available</h4>
+          <p className="text-4xl font-bold text-[#307A7F]">{availableCount}</p>
+          <p className="text-sm text-gray-400">Waiting for collection</p>
+        </div>
+
+        <div className="bg-transparent p-6 rounded-2xl shadow-2xl border-t-4 border-yellow-500 text-center">
+          <h4 className="text-gray-500 font-medium">Active Donors</h4>
+          <p className="text-4xl font-bold text-yellow-500">{activeDonors}+</p>
+          <p className="text-sm text-gray-400">Community members</p>
         </div>
       </div>
     </div>

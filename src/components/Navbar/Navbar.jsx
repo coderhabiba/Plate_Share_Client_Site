@@ -5,17 +5,17 @@ import { AuthContext } from './../context/AuthContext';
 const Navbar = () => {
   const { logOut, user } = useContext(AuthContext);
   const location = useLocation();
-   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
-   useEffect(() => {
-     localStorage.setItem('theme', theme);
-     document.querySelector('html').setAttribute('data-theme', theme);
-   }, [theme]);
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
+    document.querySelector('html').setAttribute('data-theme', theme);
+  }, [theme]);
 
-   const toggleTheme = () => {
-     setTheme(theme === 'light' ? 'dark' : 'light');
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
   };
-  
+
   const isAuthPage = [
     '/login',
     '/register',
@@ -23,27 +23,55 @@ const Navbar = () => {
     '/update-food',
   ].includes(location.pathname);
 
-  const links = (
+  // Nav Links Logic
+  const commonLinks = (
     <>
       <li>
-        <NavLink to="/">Home</NavLink>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive ? 'text-[#f0845c] font-bold' : ''
+          }
+        >
+          Home
+        </NavLink>
       </li>
       <li>
-        <NavLink to="/available-food">Available Foods</NavLink>
+        <NavLink
+          to="/available-food"
+          className={({ isActive }) =>
+            isActive ? 'text-[#f0845c] font-bold' : ''
+          }
+        >
+          Available Foods
+        </NavLink>
+      </li>
+    </>
+  );
+
+  // 
+  const loggedInLinks = user && (
+    <>
+      <li>
+        <NavLink to="/add-food">Add Food</NavLink>
+      </li>
+      <li>
+        <NavLink to="/my-food">Manage My Foods</NavLink>
       </li>
     </>
   );
 
   return (
     <div
-      className={`shadow-sm transition-colors duration-300 ${
+      className={`shadow-md transition-colors duration-300 sticky top-0 z-50 ${
         isAuthPage
           ? 'bg-white/70 backdrop-blur-md dark:bg-base-100/70'
           : 'bg-[#f7f7f7] dark:bg-base-200'
       }`}
     >
-      <div className="navbar max-w-[81%] mx-auto items-center">
-        <div className="navbar-start items-center">
+      <div className="navbar max-w-[90%] lg:max-w-[81%] mx-auto items-center">
+        {/* Navbar Start: Logo and Mobile Menu */}
+        <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
               <svg
@@ -62,38 +90,43 @@ const Navbar = () => {
               </svg>
             </div>
             <ul
-              tabIndex={-1}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+              tabIndex={0}
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow border"
             >
-              {links}
+              {commonLinks}
+              {loggedInLinks}
             </ul>
           </div>
-          <a href="/" className="flex items-center gap-1">
+          <NavLink to="/" className="flex items-center gap-1">
             <div className="w-10">
               <img
                 src="https://i.ibb.co.com/3Y5HsyM0/plateshare-logo-BBLm-FDgm.png"
-                alt="logo"
+                alt="Plate Share Logo"
               />
             </div>
-            <span className="lg:block hidden mt-2 font-black elms-font text-xl">
+            <span className="lg:block hidden mt-2 font-black text-xl elms-font">
               Plate Share
             </span>
-          </a>
+          </NavLink>
         </div>
 
+        {/* Navbar Center: Desktop Menu */}
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">{links}</ul>
+          <ul className="menu menu-horizontal px-1 gap-2">
+            {commonLinks}
+            {loggedInLinks}
+          </ul>
         </div>
 
+        {/* Navbar End: Theme & Profile */}
         <div className="navbar-end gap-3">
-          
+          {/* Theme Toggle */}
           <label className="swap swap-rotate btn btn-ghost btn-circle">
             <input
               type="checkbox"
               onChange={toggleTheme}
               checked={theme === 'dark'}
             />
-            
             <svg
               className="swap-on fill-current w-6 h-6"
               xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +134,6 @@ const Navbar = () => {
             >
               <path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
             </svg>
-            
             <svg
               className="swap-off fill-current w-6 h-6"
               xmlns="http://www.w3.org/2000/svg"
@@ -120,17 +152,22 @@ const Navbar = () => {
               >
                 <div className="w-10 rounded-full">
                   <img
-                    alt="avatar"
+                    title={user?.displayName}
                     src={
                       user?.photoURL || 'https://i.ibb.co.com/8LQPQJ6s/user.png'
                     }
+                    alt="User profile"
                   />
                 </div>
               </div>
               <ul
-                tabIndex={-1}
-                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+                tabIndex={0}
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[50] mt-3 w-52 p-2 shadow-xl border"
               >
+                <li className="px-4 py-2 font-bold text-[#307a7f]">
+                  {user?.displayName || user.email.split('@gmail.com')}
+                </li>
+                <hr className="my-1" />
                 <li>
                   <NavLink to="/add-food">Add Food</NavLink>
                 </li>
@@ -140,10 +177,10 @@ const Navbar = () => {
                 <li>
                   <NavLink to="/food-req">My Food Requests</NavLink>
                 </li>
-                <li>
+                <li className="mt-2">
                   <button
                     onClick={logOut}
-                    className="btn bg-[#f0845c] text-white mt-2"
+                    className="btn btn-sm bg-[#f0845c] text-white hover:bg-[#d9734d] border-none"
                   >
                     Logout
                   </button>
@@ -151,7 +188,10 @@ const Navbar = () => {
               </ul>
             </div>
           ) : (
-            <NavLink to="/login" className="btn bg-[#f0845c] text-white">
+            <NavLink
+              to="/login"
+              className="btn bg-[#f0845c] text-white hover:bg-[#d9734d] border-none px-6"
+            >
               Login
             </NavLink>
           )}
