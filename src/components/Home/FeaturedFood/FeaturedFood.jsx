@@ -74,7 +74,10 @@ const FeaturedFood = () => {
     );
 
   return (
-    <div className="bg-base-200 py-20 transition-colors duration-300">
+    <div
+      id="featured-foods"
+      className="bg-base-200 py-20 transition-colors duration-300"
+    >
       <div className="max-w-[80%] mx-auto">
         <h2 className="text-4xl font-bold text-[#307A7F] mb-12 text-center">
           Featured Foods

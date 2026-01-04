@@ -2,149 +2,195 @@ import { FaArrowRightLong, FaStar } from 'react-icons/fa6';
 import { LuUsers, LuChefHat } from 'react-icons/lu';
 import { GrLocation } from 'react-icons/gr';
 import { FaRegStar } from 'react-icons/fa';
-import { NavLink } from 'react-router';
+import { NavLink } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { HiOutlineChevronDoubleDown } from 'react-icons/hi';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+
+// Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 const Banner = () => {
-  const [leftAos, setLeftAos] = useState('fade-up');
-  const [rightAos, setRightAos] = useState('fade-up');
-
   useEffect(() => {
-    const setAosDirection = () => {
-      if (window.innerWidth < 768) {
-        setLeftAos('fade-down');
-        setRightAos('fade-up');
-      } else {
-        setLeftAos('fade-right');
-        setRightAos('fade-left');
-      }
-    };
-
-    setAosDirection();
-    window.addEventListener('resize', setAosDirection);
-
     AOS.init({
       duration: 1200,
-      offset: 100,
-      mirror: true,
       once: false,
       easing: 'ease-in-out',
     });
-    
-    AOS.refreshHard();
-
-    return () => {
-      window.removeEventListener('resize', setAosDirection);
-    };
   }, []);
 
+  const slideData = [
+    {
+      id: 1,
+      title: 'Share Meals, Build Community',
+      img: 'https://i.ibb.co.com/9HK2dHC2/banner.jpg',
+      desc: 'Connect with talented home cooks in your neighborhood. Discover authentic, homemade meals made with love.',
+    },
+    {
+      id: 2,
+      title: 'Save Food, Save the Planet',
+      img: 'https://i.ibb.co.com/8g7nDQrF/mission.jpg',
+      desc: 'Reduce food waste by sharing surplus with those in need. Small actions lead to big community impacts.',
+    },
+    {
+      id: 3,
+      title: 'Authentic Flavors, at Your Door',
+      desc: 'Experience the taste of home-cooked goodness from diverse cultures within your community.',
+      img: 'https://i.ibb.co.com/Ng6zhMtt/card-5.jpg',
+    },
+    {
+      id: 4,
+      title: 'Reduce Waste, Spread Joy',
+      desc: 'Join our mission to eliminate food waste by sharing surplus food with those who need it most.',
+      img: 'https://i.ibb.co.com/C5cFCB5D/footer.jpg',
+    },
+  ];
+
   return (
-    <div className="overflow-hidden py-28 grid lg:grid-cols-2 grid-cols-1 lg:gap-0 gap-10 max-w-[82%] mx-auto px-10">
-      <div data-aos={leftAos} className="banner-left lg:max-w-[90%] max-w-full">
-        <h1 className="lg:text-6xl text-5xl elms-font font-bold mb-6">
-          <span className="">Share Meals,</span>
-          <span className="bg-linear-to-r from-[#f0845c] to-[#86A4AD] bg-clip-text text-transparent elms-font">
-            Build <br /> Community
-          </span>
-        </h1>
-        <p className="mb-6 text-[#00000075] dark:text-gray-300">
-          Connect with talented home cooks in your neighborhood. Discover <br />
-          authentic, homemade meals made with love.
-        </p>
-        <div className="flex gap-5">
-          <NavLink
-            to="/available-food"
-            className="btn bg-[#f0845c] text-white hover:scale-105 transition-all ease-in-out hover:shadow-2xl shadow-[#817e7e]"
-          >
-            View All Foods <FaArrowRightLong />
-          </NavLink>
-          <NavLink
-            to="/add-food"
-            className="btn bg-transparent hover:scale-105 transition-all ease-in-out shadow-[#817e7e] hover:border-[#F0845C] hover:text-gray-500"
-          >
-            Add Food
-          </NavLink>
-        </div>
-        <p className="text-[10px] text-[#00000075] dark:text-gray-300 mt-8 mb-16">
-          ✓ Active Donator: 1,200+ • ✓ Happy Clients: 10,000+
-        </p>
-        <div className="grid lg:grid-cols-4 grid-cols-2 gap-5">
-          {[
-            { icon: <LuUsers />, count: '1,200+', label: 'Active Donator' },
-            { icon: <LuChefHat />, count: '50,000+', label: 'Meals Shared' },
-            { icon: <GrLocation />, count: '25', label: 'Cities' },
-            {
-              icon: <FaRegStar />,
-              count: '4.9',
-              label: 'Average Rating',
-              star: true,
-            },
-          ].map((item, i) => (
-            <button
-              key={i}
-              className="group flex flex-col justify-center items-center rounded-2xl py-6 border border-[#7971713b] transition-all duration-500 ease-in-out hover:scale-105 hover:border-[#f0845c] hover:shadow-md"
-            >
-              <div className="text-[#f0845c] text-2xl transition-all duration-500 ease-in-out group-hover:scale-110">
-                {item.icon}
+    <div className="relative overflow-hidden bg-base-100">
+      {/* 🟢 Height fix: 70% of screen */}
+      <div className="h-auto lg:h-[70vh] min-h-[600px] flex items-center">
+        <Swiper
+          modules={[Autoplay, Pagination, Navigation]}
+          autoplay={{ delay: 5000 }}
+          pagination={{ clickable: true }}
+          loop={true}
+          className="h-full w-full"
+        >
+          {slideData.map(slide => (
+            <SwiperSlide key={slide.id}>
+              <div className="grid lg:grid-cols-2 grid-cols-1 items-center gap-10 max-w-[82%] mx-auto px-10 h-full py-16 lg:py-0">
+                {/* Banner Left */}
+                <div
+                  data-aos="fade-right"
+                  className="banner-left lg:max-w-[90%]"
+                >
+                  <h1 className="lg:text-6xl text-5xl elms-font font-bold mb-6">
+                    <span className="leading-tight">
+                      {slide.title.split(',')[0]}
+                    </span>
+                    <br />
+                    <span className="bg-gradient-to-r from-[#f0845c] to-[#86A4AD] bg-clip-text text-transparent elms-font">
+                      {slide.title.split(',')[1]}
+                    </span>
+                  </h1>
+                  <p className="mb-6">{slide.desc}</p>
+                  <div className="flex gap-5 mb-10">
+                    <NavLink
+                      to="/available-food"
+                      className="btn bg-[#f0845c] text-white hover:scale-105 transition-all shadow-md"
+                    >
+                      View All Foods <FaArrowRightLong />
+                    </NavLink>
+                    <NavLink
+                      to="/add-food"
+                      className="btn bg-transparent hover:scale-105 transition-all border border-[#f0845c] text-[#f0845c]"
+                    >
+                      Add Food
+                    </NavLink>
+                  </div>
+
+                  {/* 🟢 আপনার সেই আগের সুন্দর ছোট কার্ডগুলো (Stats) */}
+                  <div className="grid lg:grid-cols-4 grid-cols-2 gap-5">
+                    {[
+                      {
+                        icon: <LuUsers />,
+                        count: '1,200+',
+                        label: 'Active Donator',
+                      },
+                      {
+                        icon: <LuChefHat />,
+                        count: '50,000+',
+                        label: 'Meals Shared',
+                      },
+                      { icon: <GrLocation />, count: '25', label: 'Cities' },
+                      {
+                        icon: <FaRegStar />,
+                        count: '4.9',
+                        label: 'Average Rating',
+                        star: true,
+                      },
+                    ].map((item, i) => (
+                      <button
+                        key={i}
+                        className="group flex flex-col justify-center items-center rounded-2xl py-4 border border-[#7971713b] transition-all duration-500 ease-in-out hover:scale-105 hover:border-[#f0845c] hover:shadow-md bg-white dark:bg-base-200"
+                      >
+                        <div className="text-[#f0845c] text-xl transition-all duration-500 ease-in-out group-hover:scale-110">
+                          {item.icon}
+                        </div>
+                        <h4 className="elms-font font-black text-xl my-1 group-hover:text-[#f0845c] flex items-center gap-1">
+                          {item.count}
+                          {item.star && (
+                            <FaStar className="text-[#f0845c] text-sm" />
+                          )}
+                        </h4>
+                        <p className="text-[#00000075] dark:text-gray-400 text-[8px] uppercase tracking-tighter">
+                          {item.label}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Banner Right */}
+                <div
+                  data-aos="fade-left"
+                  className="relative h-[400px] lg:h-[450px] rounded-3xl bg-cover bg-center shadow-2xl overflow-hidden"
+                  style={{ backgroundImage: `url('${slide.img}')` }}
+                >
+                  {/* Floating Badges - আপনার ডিজাইন অনুযায়ী */}
+                  <div className="absolute bg-white/90 dark:bg-base-300/90 top-5 left-5 p-3 rounded-xl border border-white/20 shadow-xl flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-[#f0845c] flex items-center justify-center text-white font-bold text-xs">
+                      AK
+                    </div>
+                    <div>
+                      <p className="font-bold text-xs dark:text-white">
+                        AK Ai Kong
+                      </p>
+                      <p className="text-[10px] text-gray-500">
+                        Shared new recipe
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="absolute top-5 right-5 bg-white/20 backdrop-blur-md p-2 rounded-xl border border-white/30">
+                    <div className="flex gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <FaStar key={i} className="text-[#f0845c] text-xs" />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="absolute bottom-5 right-5 bg-black/50 backdrop-blur-md p-3 rounded-xl border border-white/20">
+                    <span className="text-white text-xs font-semibold">
+                      ❤️ 30+ Likes This
+                    </span>
+                  </div>
+                </div>
               </div>
-              <h4 className="elms-font font-black text-2xl my-2 group-hover:text-[#f0845c] flex items-center gap-2">
-                {item.count}
-                {item.star && <FaStar className="text-[#f0845c] text-lg" />}
-              </h4>
-              <p className="text-[#00000075] dark:text-gray-300 dark:group-hover:text-gray-400 text-[9px] group-hover:text-[#000000a0]">
-                {item.label}
-              </p>
-            </button>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
       </div>
 
-      <div
-        data-aos={rightAos}
-        className="relative h-[503px] banner-right rounded-2xl bg-[url('https://i.ibb.co.com/9HK2dHC2/banner.jpg')] bg-cover"
-      >
-        <div
-          className="absolute bg-[#fd7d056c] top-5 left-5 btn flex items-center gap-2 text-left lg:py-8 py-4 lg:px-4 px-2 rounded-xl border border-[#e0e0e0] hover:scale-[1.03] transition-all"
-          data-aos={rightAos}
+      {/* 🟢 Visual Hint (Animated Scroll Down) */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 animate-bounce text-[#f0845c]">
+        <button
+          onClick={() => {
+            document
+              .getElementById('featured-foods')
+              .scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="flex flex-col items-center cursor-pointer"
         >
-          <div className="flex items-center justify-center rounded-full bg-[#f0845c] text-white font-bold border border-[#f0845c] lg:w-10 w-7 lg:h-10 h-7">
-            AK
-          </div>
-          <div>
-            <p className="font-semibold text-[#0e0d0d] lg:text-sm text-xs">
-              AK Ai Kong
-            </p>
-            <p className="lg:text-sm text-[10px] text-gray-50">
-              Shared a new recipe
-            </p>
-          </div>
-        </div>
-        <div
-          className="absolute top-5 right-5 flex flex-col items-center justify-center border border-[#e0e0e0] rounded-xl lg:px-6 px-3 lg:py-4 py-2 hover:scale-[1.03] transition-all bg-transparent"
-          data-aos={rightAos}
-        >
-          <div className="flex gap-1 mb-2">
-            {[...Array(5)].map((_, i) => (
-              <FaStar key={i} className="text-[#f0845c] lg:text-lg text-xs" />
-            ))}
-          </div>
-          <span className="font-semibold text-[#f3f3f3fa] lg:text-xs text-[8px]">
-            Perfect!
-          </span>
-        </div>
-        <div
-          className="absolute bottom-5 right-5 flex flex-col items-center justify-center bg-[#14141391] border border-[#e0e0e0] rounded-xl lg:px-6 px-3 lg:py-4 py-2 hover:scale-[1.03] transition-all"
-          data-aos={rightAos}
-        >
-          <span className="text-white font-semibold lg:text-sm text-[10px]">
-            ❤️ 30+ Likes This
-          </span>
-          <p className="text-[#35f705fd] lg:text-xs text-[8px] mt-1">
-            Recipe rocks!
-          </p>
-        </div>
+          <span className="text-[10px] font-bold uppercase mb-1">Explore</span>
+          <HiOutlineChevronDoubleDown className="text-2xl" />
+        </button>
       </div>
     </div>
   );
