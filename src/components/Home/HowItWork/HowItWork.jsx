@@ -32,7 +32,7 @@ const cardVariants = {
 
 const HowItWork = () => {
   return (
-    <div className="bg-[#fafafa]">
+    <div className="bg-base-200">
       <div className="relative px-4 py-20 max-w-6xl mx-auto">
         <div
           className="pointer-events-none absolute inset-x-0 top-10 -z-10 h-64 bg-[radial-gradient(closest-side,rgba(16,185,129,0.08),transparent_70%)]"
@@ -65,7 +65,7 @@ const HowItWork = () => {
                 />
               )}
 
-              <div className="group relative rounded-2xl border border-zinc-200/60 bg-[#F7F7F7] p-8 shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition-all duration-300 ease-out transform hover:-translate-y-2 hover:shadow-lg hover:border-[#F0845C]">
+              <div className="group relative rounded-2xl border border-zinc-200/60 bg-transparent p-8 shadow-sm ring-1 ring-black/5 backdrop-blur-sm transition-all duration-300 ease-out transform hover:-translate-y-2 hover:shadow-lg hover:border-[#F0845C]">
                 <div className="relative mx-auto mb-6 grid place-items-center">
                   <div
                     className="absolute left-24 top-0 inset-0 size-28 rounded-full bg-linear-to-br from-emerald-100 blur-xl"

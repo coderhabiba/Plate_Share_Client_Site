@@ -28,7 +28,13 @@ const FoodReq = () => {
         setRequests(formattedData);
       } catch (err) {
         console.error('Error fetching requests:', err);
-        Swal.fire('Error!', 'Could not fetch your requests.', 'error');
+        Swal.fire({
+          title: 'Error!',
+          text: 'Could not fetch your requests.',
+          icon: 'error',
+          background: 'var(--fallback-b1, #fff)',
+          color: 'var(--fallback-bc, #000)',
+        });
       } finally {
         setLoading(false);
       }
@@ -40,12 +46,14 @@ const FoodReq = () => {
   const handleDelete = async id => {
     const result = await Swal.fire({
       title: 'Are you sure?',
-      text: 'This action cannot be undone!',
+      text: 'Do you want to cancel this food request?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#F0845C',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, cancel it!',
+      background: 'var(--fallback-b1, #fff)',
+      color: 'var(--fallback-bc, #000)',
     });
 
     if (!result.isConfirmed) return;
@@ -53,63 +61,85 @@ const FoodReq = () => {
     try {
       const res = await fetch(
         `https://plate-share-server-site.vercel.app/food-request/${id}`,
-        {
-          method: 'DELETE',
-        }
+        { method: 'DELETE' }
       );
       if (!res.ok) throw new Error('Failed to delete request');
 
       setRequests(prev => prev.filter(req => req._id !== id));
-      Swal.fire('Deleted!', 'Your request has been cancelled.', 'success');
+      Swal.fire('Cancelled!', 'Your request has been removed.', 'success');
     } catch (err) {
       console.error(err);
-      Swal.fire('Error!', 'Something went wrong while deleting.', 'error');
+      Swal.fire('Error!', 'Something went wrong.', 'error');
     }
   };
 
   if (loading)
     return (
-      <div className="flex justify-center items-center mt-10">
+      <div className="flex justify-center items-center min-h-[60vh]">
         <span className="loading loading-spinner text-[#F0845C] loading-lg"></span>
       </div>
     );
 
   if (!requests.length)
     return (
-      <p className="text-center mt-10 py-40 text-gray-600">
-        You have not requested any food yet.
-      </p>
+      <div className="text-center py-40 bg-base-100 rounded-2xl border-2 border-dashed border-base-content/10 max-w-5xl mx-auto my-20">
+        <h2 className="text-2xl font-semibold text-base-content/50">
+          You have not requested any food yet.
+        </h2>
+      </div>
     );
 
   return (
-    <div className="max-w-5xl mx-auto min-h-screen my-20">
-      <h2 className="text-2xl font-bold mb-5 text-[#F0845C]">
-        My Food Requests
+    <div className="max-w-6xl mx-auto min-h-screen my-12 px-4 transition-colors duration-300">
+      <h2 className="text-3xl font-bold mb-8 text-[#F0845C] elms-font flex items-center gap-2">
+        <span className="w-1.5 h-8 bg-[#F0845C] rounded-full"></span> My Food
+        Requests
       </h2>
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+
+      <div className="overflow-x-auto bg-base-100 shadow-xl rounded-2xl border border-base-content/5">
         <table className="table w-full">
-          <thead className="bg-[#F0845C]/20">
+          {/* Table Header */}
+          <thead className="bg-base-200 text-base-content/70">
             <tr>
-              <th>Food</th>
+              <th className="py-4">Food Info</th>
               <th>Donator</th>
               <th>Status</th>
               <th>Reason</th>
               <th>Contact</th>
-              <th>Actions</th>
+              <th className="text-center">Actions</th>
             </tr>
           </thead>
-          <tbody>
+
+          {/* Table Body */}
+          <tbody className="text-base-content/80">
             {requests.map(req => (
-              <tr key={req._id}>
-                <td>{req.foodName}</td>
-                <td>{req.donatorName}</td>
-                <td>{req.status || 'Pending'}</td>
-                <td>{req.reason || '-'}</td>
-                <td>{req.contact || '-'}</td>
+              <tr
+                key={req._id}
+                className="hover:bg-base-200/50 transition-colors border-b border-base-content/5"
+              >
+                <td className="font-bold text-base-content">{req.foodName}</td>
+                <td className="text-sm font-medium">{req.donatorName}</td>
                 <td>
+                  <span
+                    className={`badge badge-sm font-bold py-3 px-4 ${
+                      req.status === 'accepted'
+                        ? 'badge-success text-white'
+                        : req.status === 'rejected'
+                        ? 'badge-error text-white'
+                        : 'badge-warning text-white'
+                    }`}
+                  >
+                    {req.status || 'Pending'}
+                  </span>
+                </td>
+                <td className="max-w-[150px] truncate italic text-xs">
+                  {req.reason || '-'}
+                </td>
+                <td className="text-xs">{req.contact || '-'}</td>
+                <td className="text-center">
                   <button
                     onClick={() => handleDelete(req._id)}
-                    className="btn btn-sm btn-error"
+                    className="btn btn-sm bg-red-50 hover:bg-red-100 text-red-600 border-none rounded-lg transition-all dark:bg-red-950/30 dark:hover:bg-red-900/50"
                   >
                     Cancel
                   </button>

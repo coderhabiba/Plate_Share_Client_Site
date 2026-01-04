@@ -6,7 +6,7 @@ import 'aos/dist/aos.css';
 const Contact = () => {
   useEffect(() => {
     AOS.init({
-      duration: 800, // animation duration
+      duration: 800,
       once: false, 
       mirror: true,
       easing: 'ease-in-out',
@@ -19,19 +19,19 @@ const Contact = () => {
         {/* left side */}
         <div className="lg:w-1/2 space-y-8" data-aos="fade-right">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            <h2 className="text-3xl font-bold text-base-content mb-2">
               Get in Touch
             </h2>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               Have questions? We'd love to hear from you.
             </p>
           </div>
 
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-400 mb-4">
               Contact Information
             </h3>
-            <ul className="space-y-3 text-gray-700">
+            <ul className="space-y-3 text-gray-700 dark:text-gray-500">
               <li className="flex items-center gap-3">
                 <FaEnvelope className="text-[#f0845c] text-lg" />
                 info@plateshare.com
@@ -48,12 +48,14 @@ const Contact = () => {
           </div>
 
           <div>
-            <h3 className="font-semibold text-gray-900 mb-2">Support</h3>
-            <p className="text-gray-600 mb-3">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-400 mb-2">
+              Support
+            </h3>
+            <p className="text-gray-600 dark:text-gray-500 mb-3">
               Need help with your account or have questions about how PlateShare
               works? Our support team is here to help!
             </p>
-            <button className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:border-[#f0845c] hover:text-[#f0845c] transition-all duration-300 hover:scale-105">
+            <button className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-400 hover:border-[#f0845c] hover:text-[#f0845c] transition-all duration-300 hover:scale-105">
               Visit Help Center
             </button>
           </div>
@@ -61,10 +63,10 @@ const Contact = () => {
 
         {/* right side form */}
         <div
-          className="lg:w-1/2 bg-[#F5F5F5] rounded-2xl shadow-lg p-8"
+          className="lg:w-1/2 bg-transparent rounded-2xl shadow-lg p-8"
           data-aos="fade-left"
         >
-          <h3 className="text-xl font-semibold text-gray-800 mb-6">
+          <h3 className="text-xl font-semibold text-base-content mb-6">
             Get in Touch
           </h3>
           <form className="space-y-4">

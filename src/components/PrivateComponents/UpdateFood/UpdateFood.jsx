@@ -30,7 +30,7 @@ const UpdateFood = () => {
         toast.error('Failed to fetch food data.');
         setLoading(false);
       });
-  }, []);
+  }, [id,user]);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -44,13 +44,14 @@ const UpdateFood = () => {
       pickupLocation: form.pickupLocation.value,
       expireDate: form.expireDate.value,
       notes: form.notes.value,
+      food_status: food.food_status
     };
 
     try {
       const res = await fetch(
         `https://plate-share-server-site.vercel.app/foods/${id}`,
         {
-          method: 'PUT',
+          method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updatedFood),
         }
@@ -77,7 +78,7 @@ const UpdateFood = () => {
     );
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 my-20">
+    <div className="min-h-screen flex items-center justify-center px-4 mb-20">
       <Toaster position="top-center" />
       <div className="w-full max-w-lg rounded-2xl bg-transparent p-8 shadow-lg">
         <h2 className="text-2xl font-semibold text-center text-[#F0845C] mb-6">
@@ -118,6 +119,7 @@ const UpdateFood = () => {
             <input
               type="number"
               name="foodQuantity"
+              min="0"
               defaultValue={food.foodQuantityNumber}
               required
               className="mt-1 w-full border border-gray-300 px-3 py-2 rounded-md outline-none focus:border-[#F0845C] focus:ring-[#F0845C]"

@@ -35,71 +35,78 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FFF5F2] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-base-200 px-4 transition-colors duration-300">
       <Toaster position="top-center" />
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg ring-1 ring-[#f0845c]/20">
-        <h2 className="text-2xl font-semibold text-center text-[#F0845C] mb-6">
+
+      <div className="w-full max-w-md rounded-3xl bg-base-100 p-10 shadow-xl border border-base-content/5">
+        <h2 className="text-3xl font-bold text-center text-[#F0845C] mb-8 elms-font">
           Welcome Back
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email
+            <label className="block text-sm font-semibold text-base-content/80 mb-2">
+              Email Address
             </label>
             <input
               type="email"
               name="email"
               required
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-[#F0845C] focus:ring-[#F0845C] outline-none"
-              placeholder="Enter your email"
+              className="w-full rounded-xl bg-base-200 border border-base-content/10 px-4 py-3 focus:border-[#F0845C] focus:ring-1 focus:ring-[#F0845C] outline-none text-base-content transition-all"
+              placeholder="name@example.com"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-semibold text-base-content/80 mb-2">
               Password
             </label>
             <input
               type="password"
               name="password"
               required
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-[#F0845C] focus:ring-[#F0845C] outline-none"
-              placeholder="••••••"
+              className="w-full rounded-xl bg-base-200 border border-base-content/10 px-4 py-3 focus:border-[#F0845C] focus:ring-1 focus:ring-[#F0845C] outline-none text-base-content transition-all"
+              placeholder="••••••••"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-[#F0845C] py-2 text-white font-medium shadow-md hover:bg-[#e5734c] transition-colors disabled:opacity-70"
+            className="w-full rounded-xl bg-[#F0845C] py-3 text-white font-bold shadow-lg hover:bg-[#e5734c] active:scale-[0.98] transition-all disabled:opacity-70"
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? (
+              <span className="loading loading-spinner loading-sm"></span>
+            ) : (
+              'Login'
+            )}
           </button>
         </form>
 
-        <div className="my-5 flex items-center justify-center gap-3">
-          <div className="h-px w-1/3 bg-gray-200" />
-          <span className="text-sm text-gray-500">or</span>
-          <div className="h-px w-1/3 bg-gray-200" />
+        {/* Divider Line */}
+        <div className="my-8 flex items-center justify-center gap-3">
+          <div className="h-px w-full bg-base-content/10" />
+          <span className="text-sm text-base-content/40 font-medium">OR</span>
+          <div className="h-px w-full bg-base-content/10" />
         </div>
 
+        {/* Google Login Button */}
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="flex items-center justify-center w-full gap-2 rounded-md border border-gray-300 py-2 hover:bg-gray-50 transition disabled:opacity-70"
+          className="flex items-center justify-center w-full gap-3 rounded-xl border border-base-content/10 bg-base-100 py-3 hover:bg-base-200 transition-all active:scale-[0.98] disabled:opacity-70 group"
         >
-          <FcGoogle className="text-xl" />
-          <span className="text-sm font-medium text-gray-700">
+          <FcGoogle className="text-2xl" />
+          <span className="text-sm font-bold text-base-content/80 group-hover:text-base-content">
             Continue with Google
           </span>
         </button>
 
-        <p className="mt-6 text-center text-sm text-gray-600">
+        <p className="mt-8 text-center text-sm text-base-content/60 font-medium">
           New here?{' '}
           <Link
             to="/register"
-            className="font-medium text-[#F0845C] hover:underline"
+            className="font-bold text-[#F0845C] hover:text-[#e5734c] hover:underline"
           >
             Create an account
           </Link>

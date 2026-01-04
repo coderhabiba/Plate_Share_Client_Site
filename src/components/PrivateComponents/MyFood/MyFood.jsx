@@ -100,7 +100,7 @@ const MyFood = () => {
                   <td>{food.foodQuantityNumber}</td>
                   <td>{food.pickupLocation}</td>
                   <td>{new Date(food.expireDate).toLocaleDateString()}</td>
-                  <td className="flex gap-2">
+                  <td className="flex items-center mt-4 gap-2">
                     <button
                       onClick={() => navigate(`/update-food/${food._id}`)}
                       className="btn btn-sm bg-[#F0845C] text-white hover:bg-[#e5734c]"

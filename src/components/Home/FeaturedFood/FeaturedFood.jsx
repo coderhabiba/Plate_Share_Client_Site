@@ -26,6 +26,7 @@ const FeaturedFood = () => {
         const data = await res.json();
 
         const sortedFoods = data
+          .filter(food => food.food_status === 'available')
           .sort((a, b) => b.foodQuantity - a.foodQuantity)
           .slice(0, 6);
         setFoods(sortedFoods);
@@ -49,7 +50,7 @@ const FeaturedFood = () => {
     );
 
   return (
-    <div className="bg-gray-50 py-20">
+    <div className="bg-base-200 py-20 transition-colors duration-300">
       <div className="max-w-[80%] mx-auto">
         <h2 className="text-4xl font-bold text-[#307A7F] mb-12 text-center">
           Featured Foods
@@ -65,7 +66,7 @@ const FeaturedFood = () => {
                 key={food._id}
                 data-aos="flip-left"
                 data-aos-delay={index * 150}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col"
+                className="bg-base-100 rounded-2xl shadow-lg overflow-hidden flex flex-col"
               >
                 <div className="transform transition duration-500 ease-in-out hover:scale-105 hover:shadow-2xl">
                   <div className="relative">
@@ -82,17 +83,17 @@ const FeaturedFood = () => {
                   </div>
                   <div className="p-8 flex-1 flex flex-col justify-between">
                     <div>
-                      <h3 className="text-2xl font-bold text-gray-800">
+                      <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-300">
                         {food.foodName}
                       </h3>
-                      <p className="text-gray-600 mt-2">
+                      <p className="text-gray-600 dark:text-gray-500 mt-2">
                         <strong>Qty :</strong> {food.foodQuantityNumber}
                       </p>
-                      <p className="text-gray-600 mt-1">
+                      <p className="text-gray-600 dark:text-gray-500 mt-1">
                         <strong>Pickup :</strong> {food.pickupLocation}
                       </p>
                       {food.notes && (
-                        <p className="text-gray-500 mt-1 italic">
+                        <p className="text-gray-500 dark:text-gray-400 mt-1 italic">
                           {food.notes}
                         </p>
                       )}

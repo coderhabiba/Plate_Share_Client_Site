@@ -28,7 +28,7 @@ const AddFood = () => {
         expireDate,
         notes,
         donator: {
-          name: user?.displayName || user?.name || 'Unknown Donator',
+          name: user?.displayName || user?.name || user?.email?.split('@')[0] || 'Unknown Donator',
           email: user?.email || 'Unknown Email',
           photoURL: user?.photoURL || 'https://i.ibb.co.com/8LQPQJ6s/user.png',
         },
@@ -59,9 +59,9 @@ const AddFood = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[#FFF5F2]">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-base-200 transition-colors duration-300">
       <Toaster position="top-center" />
-      <div className="w-full my-20 max-w-lg rounded-2xl bg-white p-8 shadow-lg">
+      <div className="w-full my-20 max-w-lg rounded-2xl bg-base-100 p-8 shadow-lg">
         <h2 className="text-2xl font-semibold text-center text-[#F0845C] mb-6">
           Add Food
         </h2>

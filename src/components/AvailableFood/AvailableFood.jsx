@@ -8,7 +8,8 @@ const AvailableFood = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  
+  
   useEffect(() => {
     const fetchFoods = async () => {
       try {
@@ -60,50 +61,62 @@ const AvailableFood = () => {
           return (
             <div
               key={food._id}
-              className="bg-white rounded-2xl shadow-md overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl relative"
+              className="bg-base-100 border border-base-content/10 rounded-2xl shadow-md overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl relative group/card"
             >
               <div className="relative group overflow-hidden">
                 <img
                   src={food.foodImage}
                   alt={food.foodName}
-                  className="w-full h-60 object-cover transition-transform duration-700 group-hover:-scale-x-100"
+                  className="w-full h-60 object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <span className="absolute top-3 left-3 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-md">
+                <span className="absolute top-3 left-3 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
                   Available
                 </span>
+
                 {food.notes && (
-                  <div className="absolute bottom-0 left-0 w-full bg-black/70 text-white text-center p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute inset-0 bg-base-300/80 backdrop-blur-sm text-base-content flex items-center justify-center p-4 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 font-medium italic">
                     {food.notes}
                   </div>
                 )}
               </div>
-              <div className="p-5 space-y-2">
-                <h3 className="text-xl font-semibold text-gray-800">
+
+              <div className="p-5 space-y-3">
+                <h3 className="text-xl font-bold text-base-content truncate elms-font">
                   {food.foodName}
                 </h3>
-                <div className="flex items-center gap-2">
+
+                {/* Donator Info */}
+                <div className="flex items-center gap-2 border-b border-base-content/5 pb-3">
                   <img
                     src={food.donator.photoURL}
                     alt={food.donator.name}
-                    className="w-8 h-8 rounded-full"
+                    className="w-7 h-7 rounded-full"
                   />
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-base-content/70 font-medium">
                     {food.donator.name}
                   </span>
                 </div>
-                <p className="text-sm">
-                  <strong>Quantity:</strong> {food.foodQuantityNumber}
-                </p>
-                <p className="text-sm">
-                  <strong>Pickup:</strong> {food.pickupLocation}
-                </p>
-                <p className="text-sm">
-                  <strong>Expires on:</strong>{' '}
-                  {new Date(food.expireDate).toLocaleDateString()}
-                </p>
+
+                {/* Info list */}
+                <div className="space-y-1.5">
+                  <p className="text-sm text-base-content/80">
+                    <strong className="text-base-content">Quantity:</strong>{' '}
+                    {food.foodQuantityNumber}
+                  </p>
+                  <p className="text-sm text-base-content/80">
+                    <strong className="text-base-content">Pickup:</strong>{' '}
+                    {food.pickupLocation}
+                  </p>
+                  <p className="text-sm text-base-content/60 flex items-center gap-1">
+                    <span className="text-[#F0845C]">●</span>
+                    <strong>Expires on:</strong>{' '}
+                    {new Date(food.expireDate).toLocaleDateString()}
+                  </p>
+                </div>
+
                 <button
                   onClick={() => handleViewDetails(food._id)}
-                  className="mt-2 w-full bg-[#F0845C] text-white py-2 rounded-full font-semibold transition-transform duration-300 hover:scale-105 hover:bg-[#e5734c] shadow-md"
+                  className="mt-4 w-full bg-[#F0845C] text-white py-2.5 rounded-xl font-bold transition-all duration-300 hover:bg-[#e5734c] active:scale-95 shadow-lg shadow-[#f0845c2a]"
                 >
                   View Details
                 </button>

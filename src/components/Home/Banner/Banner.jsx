@@ -34,7 +34,6 @@ const Banner = () => {
     });
     
     AOS.refreshHard();
-    // AOS.refresh();
 
     return () => {
       window.removeEventListener('resize', setAosDirection);
@@ -42,15 +41,15 @@ const Banner = () => {
   }, []);
 
   return (
-    <div className="overflow-hidden py-28 grid lg:grid-cols-2 grid-cols-1 lg:gap-0 gap-10 max-w-[80%] mx-auto">
+    <div className="overflow-hidden py-28 grid lg:grid-cols-2 grid-cols-1 lg:gap-0 gap-10 max-w-[82%] mx-auto px-10">
       <div data-aos={leftAos} className="banner-left lg:max-w-[90%] max-w-full">
         <h1 className="lg:text-6xl text-5xl elms-font font-bold mb-6">
-          Share Meals,
+          <span className="">Share Meals,</span>
           <span className="bg-linear-to-r from-[#f0845c] to-[#86A4AD] bg-clip-text text-transparent elms-font">
             Build <br /> Community
           </span>
         </h1>
-        <p className="mb-6 text-[#00000075]">
+        <p className="mb-6 text-[#00000075] dark:text-gray-300">
           Connect with talented home cooks in your neighborhood. Discover <br />
           authentic, homemade meals made with love.
         </p>
@@ -63,12 +62,12 @@ const Banner = () => {
           </NavLink>
           <NavLink
             to="/add-food"
-            className="btn bg-[#f5f5f5] hover:scale-105 transition-all ease-in-out shadow-[#817e7e] hover:border-[#F0845C] hover:text-gray-500"
+            className="btn bg-transparent hover:scale-105 transition-all ease-in-out shadow-[#817e7e] hover:border-[#F0845C] hover:text-gray-500"
           >
             Add Food
           </NavLink>
         </div>
-        <p className="text-[10px] text-[#00000075] mt-8 mb-16">
+        <p className="text-[10px] text-[#00000075] dark:text-gray-300 mt-8 mb-16">
           ✓ Active Donator: 1,200+ • ✓ Happy Clients: 10,000+
         </p>
         <div className="grid lg:grid-cols-4 grid-cols-2 gap-5">
@@ -94,7 +93,7 @@ const Banner = () => {
                 {item.count}
                 {item.star && <FaStar className="text-[#f0845c] text-lg" />}
               </h4>
-              <p className="text-[#00000075] text-[9px] group-hover:text-[#000000a0]">
+              <p className="text-[#00000075] dark:text-gray-300 dark:group-hover:text-gray-400 text-[9px] group-hover:text-[#000000a0]">
                 {item.label}
               </p>
             </button>
