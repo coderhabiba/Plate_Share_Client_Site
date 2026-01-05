@@ -1,93 +1,141 @@
 import { RiFacebookCircleLine } from 'react-icons/ri';
-import { TiSocialLinkedinCircular } from 'react-icons/ti';
-import { TiSocialGithubCircular } from 'react-icons/ti';
+import {
+  TiSocialLinkedinCircular,
+  TiSocialGithubCircular,
+} from 'react-icons/ti';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <div className='relative bg-[url("https://i.ibb.co.com/C5cFCB5D/footer.jpg")] bg-no-repeat bg-cover pt-10 pb-8'>
-      <div className="absolute inset-0 bg-base-100/85"></div>
-      <div className="relative z-10 max-w-[80%] mx-auto flex lg:flex-row flex-col justify-between items-start lg:gap-0 gap-10">
-        {/* logo and links */}
-        <div className="logo-links">
+    <footer className='relative bg-[url("https://i.ibb.co.com/C5cFCB5D/footer.jpg")] bg-no-repeat bg-cover pt-20 pb-10 overflow-hidden'>
+      <div className="absolute inset-0 bg-gray-50/95 dark:bg-slate-950/90 transition-colors duration-300 z-0"></div>
+
+      <div className="relative z-10 max-w-[82%] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          {/* 1. Branding Section */}
+          <div className="space-y-6">
+            <Link to="/" className="flex items-center gap-1">
+              <img
+                className="w-10 h-10"
+                src="https://i.ibb.co.com/3Y5HsyM0/plateshare-logo-BBLm-FDgm.png"
+                alt="logo"
+              />
+              <p className="font-black text-2xl elms-font tracking-tight text-slate-900 dark:text-white">
+                Plate Share
+              </p>
+            </Link>
+            <p className="text-[15px] text-slate-700 dark:text-slate-400 leading-relaxed font-medium">
+              Connecting neighborhoods through the love of home-cooked meals.
+              Share more, waste less.
+            </p>
+            <div className="flex gap-4 items-center">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[#f0845c] hover:scale-110 transition-transform cursor-pointer"
+              >
+                <RiFacebookCircleLine size={32} />
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[#f0845c] hover:scale-110 transition-transform cursor-pointer"
+              >
+                <TiSocialLinkedinCircular size={35} />
+              </a>
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[#f0845c] hover:scale-110 transition-transform cursor-pointer"
+              >
+                <TiSocialGithubCircular size={35} />
+              </a>
+            </div>
+          </div>
+
+          {/* 2. Quick Links */}
           <div>
-            <img
-              className="w-20"
-              src="https://i.ibb.co.com/3Y5HsyM0/plateshare-logo-BBLm-FDgm.png"
-              alt="logo"
-            />
-            <p className="font-extrabold text-2xl elms-font">Plate Share</p>
+            <h4 className="text-slate-900 dark:text-white font-black text-lg mb-7 uppercase tracking-wider underline decoration-[#f0845c] decoration-4 underline-offset-8">
+              Explore
+            </h4>
+            <ul className="space-y-4">
+              {[
+                { name: 'Available Foods', path: '/available-food' },
+                { name: 'Add Food', path: '/add-food' },
+                { name: 'Manage My Food', path: '/my-food' },
+                { name: 'My Food Request', path: '/food-req' },
+              ].map(link => (
+                <li key={link.name}>
+                  <Link
+                    to={link.path}
+                    className="text-slate-700 dark:text-slate-400 hover:text-[#307A7F] dark:hover:text-[#f0845c] transition-colors font-bold text-sm block cursor-pointer"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
-          <p className="text-sm mt-2 mb-5">
-            Connect with talented home cooks in your neighborhood.
-            <br />
-            Discover authentic, homemade meals made with love.
+
+          {/* 3. Support Links */}
+          <div>
+            <h4 className="text-slate-900 dark:text-white font-black text-lg mb-7 uppercase tracking-wider underline decoration-[#f0845c] decoration-4 underline-offset-8">
+              Support
+            </h4>
+            <ul className="space-y-4">
+              {[
+                'About Us',
+                'Privacy Policy',
+                'Terms of Service',
+                'Contact Us',
+              ].map(link => (
+                <li key={link}>
+                  <Link
+                    to="/"
+                    className="text-slate-700 dark:text-slate-400 hover:text-[#307A7F] dark:hover:text-[#f0845c] transition-colors font-bold text-sm block cursor-pointer"
+                  >
+                    {link}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* 4. Contact Info */}
+          <div>
+            <h4 className="text-slate-900 dark:text-white font-black text-lg mb-7 uppercase tracking-wider underline decoration-[#f0845c] decoration-4 underline-offset-8">
+              Get in Touch
+            </h4>
+            <div className="space-y-5 text-slate-700 dark:text-slate-400">
+              <div className="flex items-center gap-3">
+                <span className="text-xl">📍</span>
+                <p className="text-sm font-bold leading-relaxed">
+                  Mymensingh, <br /> Bangladesh
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-xl">📞</span>
+                <p className="text-sm font-bold leading-relaxed">
+                  +88 01777 22 77 99
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="mt-16 pt-8 border-t border-slate-300 dark:border-slate-800 text-center">
+          <p className="text-slate-600 dark:text-slate-500 text-sm font-bold">
+            © {new Date().getFullYear()}{' '}
+            <span className="text-[#f0845c]">Plate Share</span>. All Rights
+            Reserved.
           </p>
-          <div className="flex gap-2 items-center text-[#F0845C]">
-            <div className="w-10 h-10 hover:bg-[#F0845C] hover:text-white rounded-full transition-all duration-500 ease-in-out hover:shadow-lg hover:scale-105">
-              <RiFacebookCircleLine className="w-full h-full" />
-            </div>
-            <div className="w-[46px] h-[46px] hover:bg-[#F0845C] hover:text-white rounded-full transition-all duration-500 ease-in-out hover:shadow-lg hover:scale-105">
-              <TiSocialLinkedinCircular className="w-full h-full" />
-            </div>
-            <div className="w-[46px] h-[46px] hover:bg-[#F0845C] hover:text-white rounded-full transition-all duration-500 ease-in-out hover:shadow-lg hover:scale-105">
-              <TiSocialGithubCircular className="w-full h-full" />
-            </div>
-          </div>
-        </div>
-
-        {/* info */}
-        <div className="flex flex-col gap-4">
-          <h4 className="uppercase font-extrabold">Informations</h4>
-          <ul className="flex flex-col gap-3 text-base">
-            <li>About us</li>
-            <li>Privacy Policy</li>
-            <li>Term and Conditions</li>
-            <li>Contact us</li>
-          </ul>
-        </div>
-
-        {/* links */}
-        <div className="flex flex-col gap-4">
-          <h4 className="uppercase font-extrabold">Quick Links</h4>
-          <ul className="flex flex-col gap-3 text-base">
-            <li>Available Foods</li>
-            <li>Add Food</li>
-            <li>Manage My Food</li>
-            <li>My Food Request</li>
-          </ul>
-        </div>
-
-        {/* contact */}
-        <div className="flex flex-col gap-4">
-          <h4 className="uppercase font-extrabold">Contact Info</h4>
-          <ul className="flex flex-col gap-3">
-            <li>
-              <span className="font-black elms-font">
-                Address:{' '}
-              </span>
-              Mymensingh,Bangladesh
-            </li>
-            <li>
-              <span className="font-black elms-font">
-                Phone:{' '}
-              </span>
-              +88 01777 22 77 99
-            </li>
-            <li>
-              <span className="font-black elms-font">
-                Email:{' '}
-              </span>
-              info@plateshare.com
-            </li>
-          </ul>
         </div>
       </div>
-
-      {/* copyright */}
-      <div className="text-center text-xs border-t border-t-gray-300 relative z-10 pt-8 mt-10 text-base">
-        <p>© 2025 Plate Share. All Rights Reserved.</p>
-      </div>
-    </div>
+    </footer>
   );
 };
 

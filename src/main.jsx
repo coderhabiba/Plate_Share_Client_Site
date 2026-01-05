@@ -17,6 +17,20 @@ import UpdateFood from './components/PrivateComponents/UpdateFood/UpdateFood';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import ErrorPage from './components/ErrorPage/ErrorPage';
 import 'aos/dist/aos.css';
+import Dashboard from './layout/Dashboard';
+import DashboardHome from './components/Dashboard/DashboardHome';
+
+import MyProfile from './components/Dashboard/MyProfile';
+import ForgotPassword from './components/authentication/ForgotPassword';
+import AdminRoute from './routes/AdminRoute';
+import AllFoods from './components/Dashboard/adminRoutes/AllFoods';
+import ManageMyFoods from './components/Dashboard/userRoutes/ManageMyFoods';
+import MyFoodRequests from './components/Dashboard/userRoutes/MyFoodRequest';
+import ManageUsers from './components/Dashboard/adminRoutes/ManageUsers';
+import AddFoodDashboard from './components/Dashboard/userRoutes/AddFoodDashboard';
+import ManageRequest from './components/Dashboard/adminRoutes/ManageRequest';
+import Reports from './components/Dashboard/adminRoutes/Reports';
+
 
 
 const router = createBrowserRouter([
@@ -40,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: '/login',
         Component: Login,
+      },
+      {
+        path: '/forgot-password',
+        Component: ForgotPassword,
       },
       {
         path: '/add-food',
@@ -80,6 +98,68 @@ const router = createBrowserRouter([
             <FoodReq />
           </PrivateRoute>
         ),
+      },
+    ],
+  },
+  {
+    path: '/dashboard',
+    element: (
+      <PrivateRoute>
+        <Dashboard />
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <DashboardHome />,
+      },
+      {
+        path: 'manage-users',
+        element: (
+          <AdminRoute>
+            <ManageUsers />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: 'manage-req',
+        element: (
+          <AdminRoute>
+            <ManageRequest />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: 'reports',
+        element: (
+          <AdminRoute>
+            <Reports />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: 'all-foods',
+        element: (
+          <AdminRoute>
+            <AllFoods />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: 'add-food-dashboard',
+        element: <AddFoodDashboard/>
+      },
+      {
+        path: 'manage-foods',
+        element: <ManageMyFoods />,
+      },
+      {
+        path: 'my-requests',
+        element: <MyFoodRequests />,
+      },
+      {
+        path: 'profile',
+        element: <MyProfile />,
       },
     ],
   },

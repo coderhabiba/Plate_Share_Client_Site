@@ -2,7 +2,7 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   onAuthStateChanged,
-  
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -11,117 +11,91 @@ import {
 import { AuthContext } from './AuthContext';
 import { auth } from '../../firebase/Firebase.config';
 import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [role, setRole] = useState(null);
   const googleProvider = new GoogleAuthProvider();
 
-  // create new user
+  // Fetch user role from MongoDB
+  const fetchUserRole = async email => {
+    try {
+      const res = await fetch(
+        `https://plate-share-server-site.vercel.app/users/role/${email}`
+      );
+      const data = await res.json();
+      console.log('API Response (Role):', data?.role);
+
+      // ডাটাবেসে রোল যা আছে সেটিই সেট করবে, না থাকলে 'user'
+      setRole(data?.role || 'user');
+    } catch (error) {
+      console.error('Error fetching role:', error);
+      setRole('user'); // Error হলেও যাতে অ্যাপ ক্র্যাশ না করে
+    }
+  };
+
   const createUser = (email, password) => {
     setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        toast.success('Account created successfully!');
-        setLoading(false);
-      })
-      .catch(error => {
-        toast.error(error.message);
-         setLoading(false);
-      })
+    return createUserWithEmailAndPassword(auth, email, password);
   };
 
-
-  // login
   const signInUser = (email, password) => {
     setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        toast.success('Login Successfully!');
-        setLoading(false);
-        return userCredential;
-      })
-      .catch(error => {
-        toast.error(error.message);
-        setLoading(false);
-      });
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
-
-  // login with google
   const googleLogin = () => {
     setLoading(true);
-    return signInWithPopup(auth, googleProvider)
-      .then(res => {
-        toast.success('Google Login Done!');
-        setLoading(false);
-        return res.user;
-      })
-      .catch(error => {
-        toast.error(error.message);
-        setLoading(false);
-      });
+    return signInWithPopup(auth, googleProvider);
   };
 
-  // update user profile
-  const updateUser = (name, photo) => {
-    setLoading(true);
+  const updateUserProfile = (name, photo) => {
     return updateProfile(auth.currentUser, {
       displayName: name,
       photoURL: photo,
-    })
-      .then((user) => {
-        toast.success('Profile Updated');
-        setLoading(false)
-        return user;
-      })
-      .catch(error => {
-        toast.error(error.message);
-      })
+    });
   };
 
-  // email verification
-  // const emailVerification = () => {
-  //   setLoading(true);
-  //   return sendEmailVerification(auth.currentUser)
-  //     .then(() => {
-  //       toast.success('Email verification sent!');
-  //       setLoading(false)
-  //     })
-  // };
-
-  // reset password
-
-
-  // sign out
   const logOut = () => {
     setLoading(true);
-    toast.success("Logout successfully!")
+    setRole(null);
     return signOut(auth);
-}
+  };
 
-  // observe auth state
+  const resetPassword = async email => {
+    setLoading(true);
+    return await sendPasswordResetEmail(auth, email);
+  };
+
+  // Auth state observer
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, currentUser => {
-      setUser(currentUser);
-      setLoading(false); 
+    const unsubscribe = onAuthStateChanged(auth, async currentUser => {
+      // ইউজার থাকলে আগে তার রোল নিয়ে আসবে, তারপর লোডিং ফলস করবে
+      if (currentUser?.email) {
+        await fetchUserRole(currentUser.email);
+        setUser(currentUser);
+      } else {
+        setUser(null);
+        setRole(null);
+      }
+
+      
+      setLoading(false);
     });
-    return () => {
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, []);
 
   const authInfo = {
+    user,
+    role,
+    loading,
     createUser,
     signInUser,
     googleLogin,
-    updateUser,
-    
+    updateUserProfile,
     logOut,
-    user,
-    loading,
+    resetPassword,
   };
 
   return (

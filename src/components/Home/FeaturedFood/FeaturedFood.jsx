@@ -11,7 +11,7 @@ const FeaturedFood = () => {
 
   useEffect(() => {
     AOS.init({
-      duration: 800,
+      duration: 1000,
       once: false,
       mirror: true,
       easing: 'ease-in-out',
@@ -25,7 +25,6 @@ const FeaturedFood = () => {
           'https://plate-share-server-site.vercel.app/foods'
         );
         const data = await res.json();
-
         setAllFoodsCount(data);
 
         const sortedFoods = data
@@ -34,17 +33,15 @@ const FeaturedFood = () => {
               food.food_status?.toLowerCase() === 'available' &&
               food.foodQuantityNumber > 0
           )
-          .sort((a, b) => {
-            const qtyA = parseInt(a.foodQuantityNumber) || 0;
-            const qtyB = parseInt(b.foodQuantityNumber) || 0;
-            return qtyB - qtyA;
-          })
+          .sort(
+            (a, b) =>
+              (parseInt(b.foodQuantityNumber) || 0) -
+              (parseInt(a.foodQuantityNumber) || 0)
+          )
           .slice(0, 6);
         setFoods(sortedFoods);
 
-        setTimeout(() => {
-          AOS.refresh();
-        }, 100);
+        setTimeout(() => AOS.refresh(), 100);
       } catch (err) {
         console.error('Failed to fetch foods:', err);
       }
@@ -53,22 +50,19 @@ const FeaturedFood = () => {
     fetchFoods();
   }, []);
 
-  //
   const donatedCount = allFoodsCount.filter(
     f => f.food_status === 'donated'
   ).length;
   const availableCount = allFoodsCount.filter(
     f => f.food_status === 'available'
   ).length;
-
-  // 
   const activeDonors = [
     ...new Set(allFoodsCount.map(f => f.donator?.email)),
   ].filter(Boolean).length;
 
   if (loading)
     return (
-      <div className="flex justify-center items-center mt-10">
+      <div className="flex justify-center items-center py-20">
         <span className="loading loading-spinner text-[#F0845C] loading-lg"></span>
       </div>
     );
@@ -76,96 +70,149 @@ const FeaturedFood = () => {
   return (
     <div
       id="featured-foods"
-      className="bg-base-200 py-20 transition-colors duration-300"
+      className="bg-base-200 py-24 transition-colors duration-300 overflow-hidden"
     >
-      <div className="max-w-[80%] mx-auto">
-        <h2 className="text-4xl font-bold text-[#307A7F] mb-12 text-center">
-          Featured Foods
-        </h2>
+      <div className="max-w-[81%] mx-auto">
+        <div className="text-center mb-20" data-aos="fade-up">
+          <span className="text-[#f0845c] font-bold tracking-widest uppercase text-xs">
+            Top Rated
+          </span>
+          <h2 className="text-5xl font-black mt-2 elms-font leading-tight">
+            Featured <span className="text-[#307A7F]">Meals</span>
+          </h2>
+          <div className="w-24 h-1.5 bg-[#f0845c] mx-auto mt-4 rounded-full"></div>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {foods.map((food, index) => {
-            const statusColor =
-              food.food_status === 'donated' ? 'bg-red-500' : 'bg-green-500';
+        {/* Columns Layout for Desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {foods.map((food, index) => (
+            <div
+              key={food._id}
+              data-aos="flip-left"
+              data-aos-delay={index * 100}
+              className="bg-base-100 rounded-3xl shadow-xl overflow-hidden flex flex-col group transition-all duration-700 hover:shadow-2xl"
+            >
+              <div className="relative overflow-hidden h-52">
+                <img
+                  src={food.foodImage}
+                  alt={food.foodName}
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-125"
+                />
+                <span className="bg-green-500 text-white px-4 py-1.5 rounded-full text-[10px] font-black absolute top-4 left-4 shadow-lg tracking-widest">
+                  available
+                </span>
 
-            return (
-              <div
-                key={food._id}
-                data-aos="flip-left"
-                data-aos-delay={index * 150}
-                className="bg-base-100 rounded-2xl shadow-lg overflow-hidden flex flex-col"
-              >
-                <div className="transform transition duration-500 ease-in-out hover:scale-105 hover:shadow-2xl">
-                  <div className="relative">
-                    <img
-                      src={food.foodImage}
-                      alt={food.foodName}
-                      className="w-full h-56 object-cover"
-                    />
-                    <span
-                      className={`${statusColor} text-white px-3 py-1 rounded-full text-sm font-semibold absolute top-3 left-3 shadow-md`}
-                    >
-                      {food.food_status || 'Available'}
-                    </span>
+                {/* Hover notes overlay */}
+                {food.notes && (
+                  <div className="absolute inset-0 bg-black/60 backdrop-blur-sm text-white flex items-center justify-center p-6 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 text-xs italic">
+                    "{food.notes.slice(0, 80)}..."
                   </div>
-                  <div className="p-8 flex-1 flex flex-col justify-between">
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-300">
-                        {food.foodName}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-500 mt-2">
-                        <strong>Qty :</strong> {food.foodQuantityNumber}
-                      </p>
-                      <p className="text-gray-600 dark:text-gray-500 mt-1">
-                        <strong>Pickup :</strong> {food.pickupLocation}
-                      </p>
-                      {food.notes && (
-                        <p className="text-gray-500 dark:text-gray-400 mt-1 italic">
-                          {food.notes}
-                        </p>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => navigate(`/food/${food._id}`)}
-                      className="mt-5 w-full bg-[#F0845C] text-white py-2 rounded-full font-semibold transition-transform duration-300 hover:scale-105 hover:bg-[#e5734c] shadow-md"
-                    >
-                      View Details
-                    </button>
+                )}
+              </div>
+
+              <div className="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-xl font-black mb-4 line-clamp-1 group-hover:text-[#F0845C] transition-colors">
+                    {food.foodName}
+                  </h3>
+                  <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400 font-bold">
+                    <p className="flex justify-between border-b border-gray-100 dark:border-gray-800 pb-2">
+                      <span>Quantity:</span>
+                      <span className="text-[#307A7F]">
+                        {food.foodQuantityNumber} Pcs
+                      </span>
+                    </p>
+                    <p className="flex justify-between border-b border-gray-100 dark:border-gray-800 pb-2">
+                      <span>Pickup:</span>
+                      <span className="truncate ml-4">
+                        {food.pickupLocation}
+                      </span>
+                    </p>
                   </div>
                 </div>
+
+                <button
+                  onClick={() => navigate(`/food/${food._id}`)}
+                  className="mt-6 w-full bg-[#F0845C] text-white py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all duration-300 hover:bg-[#307A7F] shadow-lg shadow-orange-100 dark:shadow-none"
+                >
+                  View Details
+                </button>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
 
-        <div className="flex justify-center mt-10">
+        {/* Impact Statistics Section - Ultra Smooth Animation Fixed */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 px-4">
+          {[
+            {
+              label: 'Total Shared',
+              count: donatedCount,
+              color: 'text-[#F0845C]',
+              border: 'border-[#F0845C]',
+              desc: 'Meals successfully delivered',
+              delay: '0',
+            },
+            {
+              label: 'Currently Available',
+              count: availableCount,
+              color: 'text-[#307A7F]',
+              border: 'border-[#307A7F]',
+              desc: 'Waiting for collection',
+              delay: '200',
+            },
+            {
+              label: 'Active Donors',
+              count: activeDonors,
+              color: 'text-yellow-500',
+              border: 'border-yellow-500',
+              desc: 'Community members',
+              delay: '400',
+            },
+          ].map((stat, index) => (
+            <div
+              key={index}
+              data-aos="fade-up"
+              data-aos-delay={stat.delay}
+              className={`group bg-white dark:bg-base-100 p-10 rounded-[2rem] shadow-[0_10px_30px_-15px_rgba(0,0,0,0.1)] border-t-[10px] ${stat.border} text-center transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-4 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.15)] cursor-default relative overflow-hidden`}
+            >
+              {/* Background Subtle Shine Effect on Hover */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-gray-100/50 dark:to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+              <div className="relative z-10">
+                <h4 className="text-gray-400 dark:text-gray-500 font-black uppercase text-[11px] tracking-[0.2em] mb-4 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-300">
+                  {stat.label}
+                </h4>
+                <p
+                  className={`text-6xl font-black ${stat.color} mb-3 transition-transform duration-500 group-hover:scale-110`}
+                >
+                  {stat.count}
+                  {index !== 1 ? '+' : ''}
+                </p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 font-bold italic opacity-80 group-hover:opacity-100">
+                  {stat.desc}
+                </p>
+              </div>
+
+              {/* Bottom Decorative Bar that expands on hover */}
+              <div
+                className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 ${stat.color.replace(
+                  'text',
+                  'bg'
+                )} transition-all duration-500 group-hover:w-full`}
+              ></div>
+            </div>
+          ))}
+        </div>
+
+        {/* View All Button */}
+        <div className="flex justify-center mt-16">
           <button
             onClick={() => navigate('/available-food')}
-            className="bg-[#F0845C] text-white px-8 py-3 rounded-full font-medium transition-transform duration-300 hover:scale-105 hover:bg-[#e5734c] shadow-md"
+            className="bg-[#307A7F] hover:bg-[#F0845C] text-white px-12 py-4 rounded-full font-black uppercase tracking-widest text-sm transition-all duration-500 hover:scale-110 shadow-2xl"
           >
-            Show All
+            Show All Foods
           </button>
-        </div>
-      </div>
-
-      {/* Impact Statistics Section */}
-      <div className="max-w-[80%] mx-auto mb-16 grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
-        <div className="bg-transparent p-6 rounded-2xl shadow-2xl border-t-4 border-[#F0845C] text-center">
-          <h4 className="text-gray-500 font-medium">Total Shared</h4>
-          <p className="text-4xl font-bold text-[#F0845C]">{donatedCount}+</p>
-          <p className="text-sm text-gray-400">Meals successfully delivered</p>
-        </div>
-
-        <div className="bg-transparent p-6 rounded-2xl shadow-2xl border-t-4 border-[#307A7F] text-center">
-          <h4 className="text-gray-500 font-medium">Currently Available</h4>
-          <p className="text-4xl font-bold text-[#307A7F]">{availableCount}</p>
-          <p className="text-sm text-gray-400">Waiting for collection</p>
-        </div>
-
-        <div className="bg-transparent p-6 rounded-2xl shadow-2xl border-t-4 border-yellow-500 text-center">
-          <h4 className="text-gray-500 font-medium">Active Donors</h4>
-          <p className="text-4xl font-bold text-yellow-500">{activeDonors}+</p>
-          <p className="text-sm text-gray-400">Community members</p>
         </div>
       </div>
     </div>

@@ -1,44 +1,38 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import toast, { Toaster } from 'react-hot-toast';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import { AuthContext } from '../context/AuthContext';
 
+
 const Register = () => {
-  const { createUser, googleLogin } = useContext(AuthContext);
+  const {
+    createUser,
+    googleLogin,
+    updateUserProfile
+  } = useContext(AuthContext);
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    AOS.init({ duration: 1000 });
+  }, []);
 
   const validatePassword = password => {
     const newErrors = {};
-    if (!/[A-Z]/.test(password))
-      newErrors.upper = 'Must contain at least one uppercase letter.';
-    if (!/[a-z]/.test(password))
-      newErrors.lower = 'Must contain at least one lowercase letter.';
-    if (password.length < 6)
-      newErrors.length = 'Must be at least 6 characters long.';
+    if (!/[A-Z]/.test(password)) newErrors.upper = 'Uppercase required';
+    if (!/[a-z]/.test(password)) newErrors.lower = 'Lowercase required';
+    if (password.length < 6) newErrors.length = 'Min 6 characters';
     setErrors(newErrors);
     return newErrors;
   };
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    const form = e.target;
-    const name = form.name.value;
-    const email = form.email.value;
-    const photo = form.photo.value;
-    const password = form.password.value;
-
-    const newUser = { name, email, photo };
-
-    const pwdErrors = validatePassword(password);
-    if (Object.keys(pwdErrors).length > 0) {
-      toast.error('Please type a correct password with critaries.');
-      return;
-    }
-
+  const saveUserToDb = async (name, email, photo) => {
+    const newUser = { name, email, photo, role: 'user' };
     try {
-      await createUser(email, password);
       const res = await fetch(
         'https://plate-share-server-site.vercel.app/users',
         {
@@ -47,129 +41,203 @@ const Register = () => {
           body: JSON.stringify(newUser),
         }
       );
-      if (res.ok) {
-        toast.success('Registration successful!');
-        form.reset();
-        setTimeout(() => navigate('/'), 1500);
-      } else {
-        toast.error('Failed to save user in database.');
+      return res.ok;
+    } catch (err) {
+      console.error('DB Save Error:', err);
+      return false;
+    }
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setLoading(true);
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const photo = form.photo.value;
+    const password = form.password.value;
+
+    const pwdErrors = validatePassword(password);
+    if (Object.keys(pwdErrors).length > 0) {
+      setLoading(false);
+      return toast.error('Check password requirements');
+    }
+
+    try {
+      // 1. Create User in Firebase
+      await createUser(email, password);
+      // 2. Update Firebase Profile
+      await updateUserProfile(name, photo);
+      // 3. Save to MongoDB
+      const dbSuccess = await saveUserToDb(name, email, photo);
+
+      if (dbSuccess) {
+        toast.success('Welcome to PlateShare!');
+        navigate('/');
       }
     } catch (error) {
-      // console.log(error);
-      toast.error('Registration failed. Try again.');
+      toast.error(error.message || 'Registration failed');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
     try {
       const result = await googleLogin();
-      // console.log(result);
-      setTimeout(() => navigate('/'), 1500);
+      const user = result.user;
+
+      await saveUserToDb(user.displayName, user.email, user.photoURL);
+
+      toast.success('Logged in with Google!');
+      navigate('/');
     } catch (error) {
-      // console.log(error);
+      toast.error('Google login failed');
     }
   };
 
   return (
-    <div className="min-h-screen py-20 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-slate-50 dark:bg-base-300 flex items-center justify-center py-20 px-4">
       <Toaster position="top-center" />
-      <div className="w-full max-w-md rounded-2xl bg-transparent p-8 shadow-lg ring-1 ring-[#f0845c]/20">
-        <h2 className="text-2xl font-semibold text-center text-[#F0845C] mb-6">
-          Create an Account
-        </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Name
-            </label>
-            <input
-              type="text"
-              required
-              name="name"
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-[#F0845C] focus:ring-[#F0845C] outline-none"
-              placeholder="Enter your name"
-            />
+      <div
+        data-aos="zoom-in"
+        className="w-full max-w-4xl bg-white dark:bg-base-100 rounded-[2.5rem] shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 border border-slate-100 dark:border-none"
+      >
+        {/* Left Side: Visual/Branding */}
+        <div className="hidden md:flex flex-col justify-center items-center bg-[#307A7F] p-12 text-white relative">
+          <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-3xl"></div>
+          <h2 className="text-4xl font-black mb-6 elms-font text-center">
+            Start Sharing <br /> Today
+          </h2>
+          <p className="text-center opacity-80 font-medium leading-relaxed mb-8">
+            Connect with people, share extra food, and help build a hunger-free
+            community.
+          </p>
+          <div className="w-full h-56 bg-white/10 rounded-[2rem] border border-white/20 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center">
+            <div className="text-6xl mb-4 animate-bounce">🍲</div>
+            <p className="text-xs font-black uppercase tracking-widest opacity-60">
+              Every Plate Counts
+            </p>
           </div>
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
+        {/* Right Side: Form */}
+        <div className="p-8 lg:p-14">
+          <h2 className="text-3xl font-black text-slate-800 dark:text-white mb-2 tracking-tight">
+            Create Account
+          </h2>
+          <p className="text-slate-400 text-sm mb-8 font-bold uppercase tracking-widest">
+            Join the PlateShare family
+          </p>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                required
+                className="input input-bordered dark:bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-[#F0845C] w-full font-medium"
+              />
+              <input
+                type="text"
+                name="photo"
+                placeholder="Photo URL"
+                required
+                className="input input-bordered bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-[#F0845C] w-full font-medium"
+              />
+            </div>
+
             <input
               type="email"
-              required
               name="email"
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-[#F0845C] focus:ring-[#F0845C] outline-none"
-              placeholder="Enter your email"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Photo URL
-            </label>
-            <input
-              type="text"
-              name="photo"
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-[#F0845C] focus:ring-[#F0845C] outline-none"
-              placeholder="https://example.com/photo.jpg"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
+              placeholder="Email Address"
               required
-              name="password"
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-[#F0845C] focus:ring-[#F0845C] outline-none"
-              placeholder="••••••"
+              className="input input-bordered bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-[#F0845C] w-full font-medium"
             />
-            <ul className="mt-2 text-xs text-red-500 space-y-1">
-              {errors.upper && <li>{errors.upper}</li>}
-              {errors.lower && <li>{errors.lower}</li>}
-              {errors.length && <li>{errors.length}</li>}
-            </ul>
+
+            <div className="relative">
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+                onChange={e => validatePassword(e.target.value)}
+                className="input input-bordered bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-[#F0845C] w-full font-medium"
+              />
+
+              {/* Password Requirement Chips */}
+              <div className="flex flex-wrap gap-2 mt-3">
+                <span
+                  className={`text-[10px] px-2 py-1 rounded-full font-bold transition-all ${
+                    !errors.length
+                      ? 'bg-green-100 text-green-600'
+                      : 'bg-slate-100 text-slate-400'
+                  }`}
+                >
+                  6+ Chars
+                </span>
+                <span
+                  className={`text-[10px] px-2 py-1 rounded-full font-bold transition-all ${
+                    !errors.upper
+                      ? 'bg-green-100 text-green-600'
+                      : 'bg-slate-100 text-slate-400'
+                  }`}
+                >
+                  Uppercase
+                </span>
+                <span
+                  className={`text-[10px] px-2 py-1 rounded-full font-bold transition-all ${
+                    !errors.lower
+                      ? 'bg-green-100 text-green-600'
+                      : 'bg-slate-100 text-slate-400'
+                  }`}
+                >
+                  Lowercase
+                </span>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn w-full bg-[#F0845C] border-none text-white rounded-2xl font-black uppercase tracking-widest hover:bg-[#307A7F] shadow-xl shadow-orange-100 dark:shadow-none mt-4 h-14"
+            >
+              {loading ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                'Register Now'
+              )}
+            </button>
+          </form>
+
+          <div className="divider my-8 text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">
+            Fast Track Access
           </div>
 
           <button
-            type="submit"
-            className="w-full rounded-md bg-[#F0845C] py-2 text-white font-medium shadow-md hover:bg-[#e5734c] transition-colors"
+            onClick={handleGoogleLogin}
+            type="button"
+            className="btn btn-outline w-full rounded-2xl border-slate-200 hover:bg-slate-50 hover:text-slate-800 transition-all gap-3 h-14"
           >
-            Register
+            <FcGoogle className="text-2xl" />
+            <span className="font-bold text-slate-600">Google Account</span>
           </button>
-        </form>
 
-        <div className="my-5 flex items-center justify-center gap-3">
-          <div className="h-px w-1/3 bg-gray-200" />
-          <span className="text-sm text-gray-500">or</span>
-          <div className="h-px w-1/3 bg-gray-200" />
+          <p className="mt-8 text-center text-sm font-bold text-slate-400">
+            Already have an account?{' '}
+            <Link
+              to="/login"
+              className="text-[#307A7F] font-black hover:underline underline-offset-4 transition-all"
+            >
+              Sign In
+            </Link>
+          </p>
         </div>
-
-        <button
-          onClick={handleGoogleLogin}
-          className="flex items-center justify-center w-full gap-2 rounded-md border border-gray-300 py-2 hover:bg-gray-50 transition"
-        >
-          <FcGoogle className="text-xl" />
-          <span className="text-sm font-medium text-gray-700">
-            Continue with Google
-          </span>
-        </button>
-
-        <p className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <Link
-            to="/login"
-            className="font-medium text-[#F0845C] hover:underline"
-          >
-            Login here
-          </Link>
-        </p>
       </div>
     </div>
   );
 };
+
 export default Register;

@@ -25,21 +25,19 @@ const FoodDetails = () => {
         const res = await fetch(
           `https://plate-share-server-site.vercel.app/foods/${id}`
         );
-        if (!res.ok) throw new Error('Failed to fetch food details');
         const data = await res.json();
         setFood(data);
 
+        // Fetch requests if the user is the donator
         if (user.email === data.donator?.email) {
           const reqRes = await fetch(
             `https://plate-share-server-site.vercel.app/food-request/${id}`
           );
-          if (!reqRes.ok) throw new Error('Failed to fetch requests');
           const reqData = await reqRes.json();
           setRequests(reqData);
         }
       } catch (err) {
-        console.error(err);
-        toast.error(err.message || 'Failed to load food details');
+        toast.error('Failed to load details');
       } finally {
         setIsLoading(false);
       }
@@ -59,7 +57,7 @@ const FoodDetails = () => {
       );
 
       if (res.ok) {
-        toast.success(`Request ${action}ed successfully!`);
+        toast.success(`Request ${action}ed!`);
         setRequests(prev =>
           prev.map(req =>
             req._id === requestId ? { ...req, status: action } : req
@@ -67,38 +65,16 @@ const FoodDetails = () => {
         );
 
         if (action === 'accepted') {
-          const newQuantity = food.foodQuantityNumber - 1;
-          const newStatus = newQuantity <= 0 ? 'donated' : 'available';
-
-          const updateRes = await fetch(
-            `https://plate-share-server-site.vercel.app/foods/${food._id}`,
-            {
-              method: 'PATCH',
-              headers: { 'content-type': 'application/json' },
-              body: JSON.stringify({
-                foodQuantityNumber: newQuantity,
-                food_status: newStatus,
-              }),
-            }
-          );
-
-          if (updateRes.ok) {
-            setFood(prev => ({
-              ...prev,
-              foodQuantityNumber: newQuantity,
-              food_status: newStatus,
-            }));
-          }
-        } setRequests(prev =>
-          prev.map(req =>
-            req._id === requestId ? { ...req, status: action } : req
-          )
-        );
+          setFood(prev => ({
+            ...prev,
+            foodQuantityNumber: prev.foodQuantityNumber - 1,
+          }));
+        }
       }
     } catch (error) {
-      toast.error('Something went wrong');
+      toast.error('Action failed');
     }
-  }; 
+  };
 
   if (isLoading)
     return (
@@ -107,75 +83,46 @@ const FoodDetails = () => {
       </div>
     );
 
-  if (!food)
-    return (
-      <p className="text-center mt-10 text-error font-bold">Food not found</p>
-    );
-
   return (
-    <div className="max-w-6xl mx-auto my-12 px-4 transition-colors duration-300">
+    <div className="max-w-7xl mx-auto my-12 px-4 space-y-12">
       <Toaster position="top-center" />
 
-      {/* Main Details Card */}
-      <div className="card lg:card-side bg-base-100 shadow-2xl border border-base-content/5 overflow-hidden">
-        <figure className="lg:w-1/2 overflow-hidden">
+      {/* --- Section 1: Hero / Overview --- */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 bg-white dark:bg-base-100 p-6 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800">
+        <div className="relative group overflow-hidden rounded-2xl">
           <img
             src={food.foodImage}
             alt={food.foodName}
-            className="w-full h-full min-h-[300px] object-cover hover:scale-105 transition-transform duration-500"
+            className="w-full h-[450px] object-cover transition-transform duration-700 group-hover:scale-105"
           />
-        </figure>
-
-        <div className="card-body lg:w-1/2 p-8">
-          <div className="flex justify-between items-start">
-            <h2 className="text-4xl font-bold text-[#F0845C] elms-font">
-              {food.foodName}
-            </h2>
-            <span
-              className={`badge badge-lg border-none text-white ${
-                food.food_status === 'donated' ? 'bg-error' : 'bg-success'
-              }`}
-            >
-              {food.food_status}
-            </span>
+          <div className="absolute top-4 right-4 bg-green-500 backdrop-blur px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">
+            {food.food_status}
           </div>
+        </div>
 
-          <div className="space-y-3 mt-4 text-base-content/80">
-            <p className="flex items-center gap-2">
-              <strong className="text-base-content">Quantity:</strong>{' '}
-              {food.foodQuantityNumber} portions
-            </p>
-            <p className="flex items-center gap-2">
-              <strong className="text-base-content">Pickup:</strong>{' '}
-              {food.pickupLocation}
-            </p>
-            <p className="flex items-center gap-2">
-              <strong className="text-base-content">Expires:</strong>{' '}
-              {new Date(food.expireDate).toLocaleDateString()}
-            </p>
-            <div className="bg-base-200 p-4 rounded-xl mt-4">
-              <strong className="text-base-content block mb-1">Notes:</strong>
-              <p className="italic text-sm">
-                {food.notes || 'No extra instructions provided.'}
-              </p>
-            </div>
-          </div>
+        <div className="flex flex-col justify-center space-y-6">
+          <h1 className="text-5xl font-black elms-font leading-tight">
+            {food.foodName}
+          </h1>
+          <p className="text-lg italic leading-relaxed">
+            "
+            {food.notes ||
+              'This meal is prepared with love and ready to be shared with someone in need.'}
+            "
+          </p>
 
-          {/* Donator Section */}
-          <div className="mt-8 pt-6 border-t border-base-content/10 flex items-center gap-4">
+          <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-base-200 rounded-2xl">
             <img
-              src={
-                food.donator?.photoURL || 'https://i.ibb.co/8LQPQJ6s/user.png'
-              }
-              alt={food.donator?.name}
+              src={food.donator?.photoURL}
               className="w-14 h-14 rounded-full"
+              alt=""
             />
             <div>
-              <p className="font-bold text-base-content">
+              <p className="font-bold">
                 {food.donator?.name}
               </p>
-              <p className="text-sm text-base-content/60">
-                {food.donator?.email}
+              <p className="text-xs text-slate-400 uppercase tracking-widest font-bold">
+                Verified Donor
               </p>
             </div>
           </div>
@@ -184,7 +131,7 @@ const FoodDetails = () => {
             food.food_status !== 'donated' && (
               <button
                 onClick={() => setShowModal(true)}
-                className="btn bg-[#F0845C] hover:bg-[#e5734c] text-white border-none rounded-xl mt-8 w-full lg:w-max px-10 shadow-lg shadow-[#f0845c33]"
+                className="btn btn-lg bg-[#F0845C] border-none text-white hover:bg-[#307A7F] transition-all duration-300 rounded-2xl shadow-xl shadow-orange-100 dark:shadow-none"
               >
                 Request This Food
               </button>
@@ -192,90 +139,121 @@ const FoodDetails = () => {
         </div>
       </div>
 
-      {/* Request Table Section */}
+      {/* --- Section 2: Key Information & Description --- */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="md:col-span-2 bg-white dark:bg-base-100 p-8 rounded-3xl shadow-sm border border-gray-50 dark:border-gray-800">
+          <h3 className="text-2xl font-bold mb-6 text-[#307A7F] flex items-center gap-2">
+            <span className="w-1.5 h-6 bg-[#F0845C] rounded-full"></span>{' '}
+            Description & Instructions
+          </h3>
+          <div className="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-400">
+            <p>
+              This food was prepared on{' '}
+              <strong>{new Date().toLocaleDateString()}</strong>. We ensure
+              high-quality standards for all shared items. Please follow the
+              pickup instructions below for a smooth experience.
+            </p>
+            <ul className="mt-4 space-y-2">
+              <li>• Bring your own container if possible.</li>
+              <li>• Collect the food within the mentioned expiry date.</li>
+              <li>• Inform the donor at least 30 minutes before arrival.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="bg-[#307A7F] p-8 rounded-3xl text-white shadow-lg space-y-6">
+          <h3 className="text-xl font-black uppercase tracking-widest border-b border-white/20 pb-4">
+            Key Specs
+          </h3>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="opacity-70 font-bold">Quantity</span>
+              <span className="font-black text-xl">
+                {food.foodQuantityNumber} Servings
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70 font-bold">Pickup At</span>
+              <span className="font-bold text-right">
+                {food.pickupLocation}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="opacity-70 font-bold">Expires On</span>
+              <span className="bg-red-500 px-3 py-1 rounded-lg font-bold text-sm">
+                {new Date(food.expireDate).toLocaleDateString()}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* --- Section 3: Donor Requests (Only for Donor) --- */}
       {user?.email === food?.donator?.email && requests.length > 0 && (
-        <div className="mt-12 bg-base-100 shadow-xl rounded-2xl p-6 border border-base-content/5">
-          <h3 className="text-2xl font-bold mb-6 text-base-content elms-font flex items-center gap-2">
-            <span className="w-2 h-8 bg-[#F0845C] rounded-full"></span> Incoming
-            Requests
+        <div className="bg-white dark:bg-base-100 shadow-2xl rounded-3xl p-8 overflow-hidden border-t-8 border-[#307A7F]">
+          <h3 className="text-3xl font-black mb-8 tracking-tight">
+            Manage Requests
           </h3>
           <div className="overflow-x-auto">
-            <table className="table w-full">
-              <thead className="bg-base-200 text-base-content/70">
-                <tr>
-                  <th>Requester</th>
-                  <th>Details</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+            <table className="table w-full border-separate border-spacing-y-3">
+              <thead>
+                <tr className="text-[#307A7F] font-black uppercase text-xs tracking-[0.2em]">
+                  <th className="bg-transparent">Requester</th>
+                  <th className="bg-transparent">Reason</th>
+                  <th className="bg-transparent text-center">Status</th>
+                  <th className="bg-transparent text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="text-base-content/80">
+              <tbody>
                 {requests.map(req => (
                   <tr
                     key={req._id}
-                    className="hover:bg-base-200/50 transition-colors"
+                    className="bg-slate-50 dark:bg-base-200 shadow-sm rounded-xl"
                   >
-                    <td>
+                    <td className="rounded-l-2xl">
                       <div className="flex items-center gap-3">
-                        <div className="avatar">
-                          <div className="mask mask-squircle w-10 h-10">
-                            <img src={req.photoURL} alt={req.name} />
-                          </div>
-                        </div>
-                        <div>
-                          <div className="font-bold text-base-content">
-                            {req.name}
-                          </div>
-                          <div className="text-xs opacity-50">
-                            {req.contact}
-                          </div>
-                        </div>
+                        <img
+                          src={req.photoURL}
+                          className="w-10 h-10 rounded-full"
+                          alt=""
+                        />
+                        <span className="font-bold">{req.name}</span>
                       </div>
                     </td>
                     <td>
-                      <p className="text-sm max-w-xs truncate">
-                        <span className="font-semibold">Reason:</span>{' '}
-                        {req.reason}
-                      </p>
-                      <p className="text-xs opacity-60">Loc: {req.location}</p>
+                      <p className="max-w-xs truncate italic">"{req.reason}"</p>
                     </td>
-                    <td>
+                    <td className="text-center">
                       <span
-                        className={`badge badge-sm font-bold ${
+                        className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
                           req.status === 'accepted'
-                            ? 'badge-success'
-                            : req.status === 'rejected'
-                            ? 'badge-error'
-                            : 'badge-ghost'
+                            ? 'bg-green-100 text-green-600'
+                            : 'bg-orange-100 text-orange-600'
                         }`}
                       >
                         {req.status}
                       </span>
                     </td>
-                    <td className="flex gap-2">
-                      {req.status === 'pending' ? (
-                        <>
+                    <td className="rounded-r-2xl text-right">
+                      {req.status === 'pending' && (
+                        <div className="flex justify-end gap-2">
                           <button
-                            className="btn btn-xs btn-success text-white"
                             onClick={() =>
                               handleAcceptReject(req._id, 'accepted')
                             }
+                            className="btn btn-xs btn-success text-white px-4"
                           >
                             Accept
                           </button>
                           <button
-                            className="btn btn-xs btn-error text-white"
                             onClick={() =>
                               handleAcceptReject(req._id, 'rejected')
                             }
+                            className="btn btn-xs btn-error text-white px-4"
                           >
                             Reject
                           </button>
-                        </>
-                      ) : (
-                        <span className="text-xs italic opacity-40">
-                          Processed
-                        </span>
+                        </div>
                       )}
                     </td>
                   </tr>
@@ -290,13 +268,16 @@ const FoodDetails = () => {
         <FoodReqModal
           foodId={food._id}
           foodName={food.foodName}
+          foodImage={food.foodImage}
           donator={food.donator}
+          pickupLocation={food.pickupLocation}
+          expireDate={food.expireDate}
           showModal={showModal}
           setShowModal={setShowModal}
         />
       )}
     </div>
   );
-}; 
+};
 
 export default FoodDetails;
