@@ -32,7 +32,7 @@ const FoodReqModal = ({
       reason: form.reason.value,
       contact: form.contact.value,
       status: 'pending',
-      createdAt: new Date().toISOString(),
+      createdAt: new Date(),
     };
 
     try {

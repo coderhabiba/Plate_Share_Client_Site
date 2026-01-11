@@ -138,14 +138,14 @@ const Register = () => {
                 name="name"
                 placeholder="Full Name"
                 required
-                className="input input-bordered dark:bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-[#F0845C] w-full font-medium"
+                className="w-full rounded-2xl bg-slate-50 dark:bg-base-200 border-none px-5 py-4 focus:ring-2 focus:ring-[#F0845C] outline-none transition-all font-medium placeholder:text-slate-400"
               />
               <input
                 type="text"
                 name="photo"
                 placeholder="Photo URL"
                 required
-                className="input input-bordered bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-[#F0845C] w-full font-medium"
+                className="w-full rounded-2xl bg-slate-50 dark:bg-base-200 border-none px-5 py-4 focus:ring-2 focus:ring-[#F0845C] outline-none transition-all font-medium placeholder:text-slate-400"
               />
             </div>
 
@@ -154,7 +154,7 @@ const Register = () => {
               name="email"
               placeholder="Email Address"
               required
-              className="input input-bordered bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-[#F0845C] w-full font-medium"
+              className="w-full rounded-2xl bg-slate-50 dark:bg-base-200 border-none px-5 py-4 focus:ring-2 focus:ring-[#F0845C] outline-none transition-all font-medium placeholder:text-slate-400"
             />
 
             <div className="relative">
@@ -164,7 +164,7 @@ const Register = () => {
                 placeholder="Password"
                 required
                 onChange={e => validatePassword(e.target.value)}
-                className="input input-bordered bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-[#F0845C] w-full font-medium"
+                className="w-full rounded-2xl bg-slate-50 dark:bg-base-200 border-none px-5 py-4 focus:ring-2 focus:ring-[#F0845C] outline-none transition-all font-medium placeholder:text-slate-400"
               />
 
               {/* Password Requirement Chips */}

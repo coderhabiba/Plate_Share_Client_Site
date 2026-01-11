@@ -29,7 +29,8 @@ import MyFoodRequests from './components/Dashboard/userRoutes/MyFoodRequest';
 import ManageUsers from './components/Dashboard/adminRoutes/ManageUsers';
 import AddFoodDashboard from './components/Dashboard/userRoutes/AddFoodDashboard';
 import ManageRequest from './components/Dashboard/adminRoutes/ManageRequest';
-import Reports from './components/Dashboard/adminRoutes/Reports';
+import UserOverview from './components/Dashboard/userRoutes/UserOverview';
+import AdminOverview from './components/Dashboard/adminRoutes/AdminOverview';
 
 
 
@@ -114,6 +115,20 @@ const router = createBrowserRouter([
         element: <DashboardHome />,
       },
       {
+        path: 'profile',
+        element: <MyProfile />,
+      },
+
+      //admin dasboard routes
+      {
+        path: 'admin-overview',
+        element: (
+          <AdminRoute>
+            <AdminOverview />
+          </AdminRoute>
+        ),
+      },
+      {
         path: 'manage-users',
         element: (
           <AdminRoute>
@@ -130,14 +145,6 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'reports',
-        element: (
-          <AdminRoute>
-            <Reports />
-          </AdminRoute>
-        ),
-      },
-      {
         path: 'all-foods',
         element: (
           <AdminRoute>
@@ -145,9 +152,15 @@ const router = createBrowserRouter([
           </AdminRoute>
         ),
       },
+
+      //users dasboard routes
+      {
+        path: 'user-overview',
+        element: <UserOverview />,
+      },
       {
         path: 'add-food-dashboard',
-        element: <AddFoodDashboard/>
+        element: <AddFoodDashboard />,
       },
       {
         path: 'manage-foods',
@@ -156,11 +169,7 @@ const router = createBrowserRouter([
       {
         path: 'my-requests',
         element: <MyFoodRequests />,
-      },
-      {
-        path: 'profile',
-        element: <MyProfile />,
-      },
+      }
     ],
   },
 ]);

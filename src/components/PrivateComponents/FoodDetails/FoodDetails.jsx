@@ -28,7 +28,6 @@ const FoodDetails = () => {
         const data = await res.json();
         setFood(data);
 
-        // Fetch requests if the user is the donator
         if (user.email === data.donator?.email) {
           const reqRes = await fetch(
             `https://plate-share-server-site.vercel.app/food-request/${id}`
@@ -45,6 +44,7 @@ const FoodDetails = () => {
     fetchFoodDetails();
   }, [user, loading, id, navigate]);
 
+  // মডিফাইড একসেপ্ট লজিক: সার্ভারে foodId পাঠানো হচ্ছে কোয়ান্টিটি কমানোর জন্য
   const handleAcceptReject = async (requestId, action) => {
     try {
       const res = await fetch(
@@ -52,7 +52,10 @@ const FoodDetails = () => {
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: action }),
+          body: JSON.stringify({
+            status: action,
+            foodId: food._id, // খাবারের আইডি পাঠানো হচ্ছে ব্যাকএন্ডে আপডেট করার জন্য
+          }),
         }
       );
 
@@ -67,7 +70,8 @@ const FoodDetails = () => {
         if (action === 'accepted') {
           setFood(prev => ({
             ...prev,
-            foodQuantityNumber: prev.foodQuantityNumber - 1,
+            foodQuantityNumber:
+              prev.foodQuantityNumber > 0 ? prev.foodQuantityNumber - 1 : 0,
           }));
         }
       }
@@ -95,8 +99,12 @@ const FoodDetails = () => {
             alt={food.foodName}
             className="w-full h-[450px] object-cover transition-transform duration-700 group-hover:scale-105"
           />
-          <div className="absolute top-4 right-4 bg-green-500 backdrop-blur px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">
-            {food.food_status}
+          <div
+            className={`absolute top-4 right-4 backdrop-blur px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest ${
+              food.foodQuantityNumber > 0 ? 'bg-green-500' : 'bg-red-500'
+            } text-white`}
+          >
+            {food.foodQuantityNumber > 0 ? food.food_status : 'Out of Stock'}
           </div>
         </div>
 
@@ -106,7 +114,7 @@ const FoodDetails = () => {
           </h1>
           <p className="text-lg italic leading-relaxed">
             "
-            {food.notes ||
+            {food.additionalNotes ||
               'This meal is prepared with love and ready to be shared with someone in need.'}
             "
           </p>
@@ -114,28 +122,31 @@ const FoodDetails = () => {
           <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-base-200 rounded-2xl">
             <img
               src={food.donator?.photoURL}
-              className="w-14 h-14 rounded-full"
+              className="w-14 h-14 rounded-full object-cover"
               alt=""
             />
             <div>
-              <p className="font-bold">
-                {food.donator?.name}
-              </p>
+              <p className="font-bold">{food.donator?.name}</p>
               <p className="text-xs text-slate-400 uppercase tracking-widest font-bold">
                 Verified Donor
               </p>
             </div>
           </div>
 
+          {/* Request Button with Quantity Check */}
           {user?.email !== food.donator?.email &&
-            food.food_status !== 'donated' && (
+            (food.foodQuantityNumber > 0 ? (
               <button
                 onClick={() => setShowModal(true)}
                 className="btn btn-lg bg-[#F0845C] border-none text-white hover:bg-[#307A7F] transition-all duration-300 rounded-2xl shadow-xl shadow-orange-100 dark:shadow-none"
               >
                 Request This Food
               </button>
-            )}
+            ) : (
+              <button disabled className="btn btn-lg rounded-2xl">
+                Out of Stock
+              </button>
+            ))}
         </div>
       </div>
 
@@ -148,10 +159,10 @@ const FoodDetails = () => {
           </h3>
           <div className="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-400">
             <p>
-              This food was prepared on{' '}
-              <strong>{new Date().toLocaleDateString()}</strong>. We ensure
-              high-quality standards for all shared items. Please follow the
-              pickup instructions below for a smooth experience.
+              This food was listed on{' '}
+              <strong>{new Date(food.expireDate).toLocaleDateString()}</strong>.
+              We ensure high-quality standards for all shared items. Please
+              follow the pickup instructions below for a smooth experience.
             </p>
             <ul className="mt-4 space-y-2">
               <li>• Bring your own container if possible.</li>
@@ -213,15 +224,19 @@ const FoodDetails = () => {
                     <td className="rounded-l-2xl">
                       <div className="flex items-center gap-3">
                         <img
-                          src={req.photoURL}
-                          className="w-10 h-10 rounded-full"
+                          src={req.requesterImage || req.photoURL}
+                          className="w-10 h-10 rounded-full object-cover"
                           alt=""
                         />
-                        <span className="font-bold">{req.name}</span>
+                        <span className="font-bold">
+                          {req.requesterName || req.name}
+                        </span>
                       </div>
                     </td>
                     <td>
-                      <p className="max-w-xs truncate italic">"{req.reason}"</p>
+                      <p className="max-w-xs truncate italic">
+                        "{req.additionalNotes || req.reason}"
+                      </p>
                     </td>
                     <td className="text-center">
                       <span
@@ -272,6 +287,7 @@ const FoodDetails = () => {
           donator={food.donator}
           pickupLocation={food.pickupLocation}
           expireDate={food.expireDate}
+          foodQuantityNumber={food.foodQuantityNumber}
           showModal={showModal}
           setShowModal={setShowModal}
         />

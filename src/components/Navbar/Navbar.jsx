@@ -1,11 +1,34 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from './../context/AuthContext';
+import {
+  FaHome,
+  FaUtensils,
+  FaTachometerAlt,
+  FaPlusCircle,
+  FaFolderOpen,
+  FaHistory,
+  FaSignOutAlt,
+  FaUserShield,
+} from 'react-icons/fa';
 
 const Navbar = () => {
   const { logOut, user } = useContext(AuthContext);
   const location = useLocation();
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const [role, setRole] = useState(null);
+
+  // fetch user role
+  useEffect(() => {
+    if (user?.email) {
+      fetch(`https://plate-share-server-site.vercel.app/users/role/${user.email}`)
+        .then(res => res.json())
+        .then(data => setRole(data.role))
+        .catch(err => console.error('Error fetching role:', err));
+    }
+  }, [user?.email]);
+
+  const isAdmin = role?.toLowerCase() === 'admin';
 
   useEffect(() => {
     localStorage.setItem('theme', theme);
@@ -16,64 +39,67 @@ const Navbar = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
-  const isAuthPage = [
-    '/login',
-    '/register',
-    '/add-food',
-    '/update-food',
-  ].includes(location.pathname);
+  const isAuthPage = ['/login', '/register'].includes(location.pathname);
 
-  // Nav Links Logic
+  // Nav Link Styles
+  const navStyles = ({ isActive }) =>
+    isActive
+      ? 'text-[#f0845c] font-black border-b-2 border-[#f0845c] pb-1 flex items-center gap-2'
+      : 'font-semibold flex items-center gap-2 hover:text-[#f0845c] transition-all duration-300 text-slate-600 dark:text-slate-300';
+
+  // Common Links
   const commonLinks = (
     <>
       <li>
-        <NavLink
-          to="/"
-          className={({ isActive }) =>
-            isActive ? 'text-[#f0845c] font-bold' : ''
-          }
-        >
-          Home
+        <NavLink to="/" className={navStyles}>
+          <FaHome className="lg:hidden" /> Home
         </NavLink>
       </li>
       <li>
-        <NavLink
-          to="/available-food"
-          className={({ isActive }) =>
-            isActive ? 'text-[#f0845c] font-bold' : ''
-          }
-        >
-          Available Foods
+        <NavLink to="/available-food" className={navStyles}>
+          <FaUtensils className="lg:hidden" /> Available Foods
         </NavLink>
       </li>
     </>
   );
 
-  // 
+  // Dynamic Links based on Admin/User Role
   const loggedInLinks = user && (
     <>
-      <li>
-        <NavLink to="/add-food">Add Food</NavLink>
-      </li>
-      <li>
-        <NavLink to="/my-food">Manage My Foods</NavLink>
-      </li>
+      {isAdmin ? (
+        <li>
+          <NavLink to="/dashboard/admin-overview" className={navStyles}>
+            <FaUserShield className="lg:hidden text-[#307A7F]" /> Admin
+            Analytics
+          </NavLink>
+        </li>
+      ) : (
+        <li>
+          <NavLink to="/dashboard" className={navStyles}>
+            <FaTachometerAlt className="lg:hidden" /> Dashboard
+          </NavLink>
+        </li>
+      )}
     </>
   );
 
   return (
     <div
-      className={`shadow-md transition-colors duration-300 sticky top-0 z-50 ${
+      className={`shadow-sm transition-all duration-300 sticky top-0 z-[100] border-b dark:border-slate-800 ${
         isAuthPage
           ? 'bg-white/70 backdrop-blur-md dark:bg-base-100/70'
-          : 'bg-[#f7f7f7] dark:bg-base-200'
+          : 'bg-white/90 backdrop-blur-md dark:bg-base-200/90'
       }`}
     >
-      <div className="navbar max-w-[90%] lg:max-w-[81%] mx-auto items-center">
-        {/* Navbar Start: Logo and Mobile Menu */}
+      <div className="navbar max-w-[95%] lg:max-w-[85%] mx-auto py-3">
+        {/* Navbar Start: Logo & Mobile Menu */}
         <div className="navbar-start">
           <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost lg:hidden text-[#307A7F]"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -91,37 +117,42 @@ const Navbar = () => {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow border"
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-5 shadow-2xl bg-base-100 rounded-2xl w-64 border gap-4 font-bold"
             >
               {commonLinks}
               {loggedInLinks}
             </ul>
           </div>
-          <NavLink to="/" className="flex items-center gap-1">
+
+          <NavLink
+            to="/"
+            className="flex items-center gap-2 group transition-transform active:scale-95"
+          >
             <div className="w-10">
               <img
                 src="https://i.ibb.co.com/3Y5HsyM0/plateshare-logo-BBLm-FDgm.png"
-                alt="Plate Share Logo"
+                alt="Plate Share"
+                className="group-hover:rotate-12 transition-transform duration-300"
               />
             </div>
-            <span className="lg:block hidden mt-2 font-black text-xl elms-font">
-              Plate Share
+            <span className="hidden sm:block font-black text-2xl tracking-tighter elms-font text-slate-800 dark:text-white">
+              Plate<span className="text-[#f0845c]">Share</span>
             </span>
           </NavLink>
         </div>
 
         {/* Navbar Center: Desktop Menu */}
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 gap-2">
+          <ul className="menu menu-horizontal px-1 gap-8">
             {commonLinks}
             {loggedInLinks}
           </ul>
         </div>
 
         {/* Navbar End: Theme & Profile */}
-        <div className="navbar-end gap-3">
-          {/* Theme Toggle */}
-          <label className="swap swap-rotate btn btn-ghost btn-circle">
+        <div className="navbar-end gap-2 lg:gap-4">
+          {/* Theme Toggle Button */}
+          <label className="swap swap-rotate btn btn-ghost btn-circle text-[#307A7F]">
             <input
               type="checkbox"
               onChange={toggleTheme}
@@ -148,41 +179,88 @@ const Navbar = () => {
               <div
                 tabIndex={0}
                 role="button"
-                className="btn btn-ghost btn-circle avatar"
+                className="btn btn-ghost btn-circle avatar border-2 border-[#307A7F] shadow-sm"
               >
                 <div className="w-10 rounded-full">
                   <img
-                    title={user?.displayName}
                     src={
                       user?.photoURL || 'https://i.ibb.co.com/8LQPQJ6s/user.png'
                     }
-                    alt="User profile"
+                    alt="Profile"
                   />
                 </div>
               </div>
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[50] mt-3 w-52 p-2 shadow-xl border"
+                className="menu menu-sm dropdown-content mt-4 z-[100] p-4 shadow-2xl bg-base-100 rounded-2xl w-64 border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in duration-200"
               >
-                <li className="px-4 py-2 font-bold text-[#307a7f]">
-                  {user?.displayName || user.email.split('@gmail.com')}
-                </li>
-                <hr className="my-1" />
+                <div className="px-3 py-3 mb-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                  <p className="font-black text-[#307A7F] truncate">
+                    {user?.displayName}
+                  </p>
+                  <div className="flex items-center gap-1">
+                    <span
+                      className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${
+                        isAdmin
+                          ? 'bg-red-100 text-red-600'
+                          : 'bg-emerald-100 text-emerald-600'
+                      }`}
+                    >
+                      {isAdmin ? 'Admin' : 'User'}
+                    </span>
+                    <p className="text-[10px] text-slate-400 font-bold truncate">
+                      {user?.email}
+                    </p>
+                  </div>
+                </div>
+
+                {/* dropdown */}
                 <li>
-                  <NavLink to="/add-food">Add Food</NavLink>
+                  <NavLink to="/dashboard" className="py-3 flex gap-3">
+                    <FaTachometerAlt className="text-[#f0845c]" /> Dashboard
+                  </NavLink>
                 </li>
-                <li>
-                  <NavLink to="/my-food">Manage My Foods</NavLink>
-                </li>
-                <li>
-                  <NavLink to="/food-req">My Food Requests</NavLink>
-                </li>
-                <li className="mt-2">
+
+                {!isAdmin && (
+                  <>
+                    <li>
+                      <NavLink to="/add-food" className="py-3 flex gap-3">
+                        <FaPlusCircle className="text-[#f0845c]" /> Add Food
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/my-food" className="py-3 flex gap-3">
+                        <FaFolderOpen className="text-[#f0845c]" /> Manage My
+                        Foods
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/food-req" className="py-3 flex gap-3">
+                        <FaHistory className="text-[#f0845c]" /> My Food
+                        Requests
+                      </NavLink>
+                    </li>
+                  </>
+                )}
+
+                {isAdmin && (
+                  <li>
+                    <NavLink
+                      to="/dashboard/admin-overview"
+                      className="py-3 flex gap-3"
+                    >
+                      <FaUserShield className="text-[#307A7F]" /> Admin
+                      Analytics
+                    </NavLink>
+                  </li>
+                )}
+
+                <li className="mt-4 pt-2 border-t dark:border-slate-700">
                   <button
                     onClick={logOut}
-                    className="btn btn-sm bg-[#f0845c] text-white hover:bg-[#d9734d] border-none"
+                    className="btn btn-sm bg-[#f0845c] text-white hover:bg-[#d9734d] border-none rounded-xl w-full flex items-center justify-center gap-2"
                   >
-                    Logout
+                    <FaSignOutAlt /> Logout
                   </button>
                 </li>
               </ul>
@@ -190,7 +268,7 @@ const Navbar = () => {
           ) : (
             <NavLink
               to="/login"
-              className="btn bg-[#f0845c] text-white hover:bg-[#d9734d] border-none px-6"
+              className="btn bg-[#f0845c] text-white hover:bg-[#307A7F] border-none px-8 rounded-full shadow-lg shadow-orange-100 dark:shadow-none transition-all duration-300"
             >
               Login
             </NavLink>
