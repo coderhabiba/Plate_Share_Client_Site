@@ -6,6 +6,12 @@
 
 ---
 
+## 📸 Project Preview
+
+<p align="center">
+  <img src="https://i.ibb.co.com/5gtV6Y02/Screenshot-2026-01-02-132302.png" alt="PlateShare Screenshot" width="800">
+</p>
+
 ## 🌟 Key Features
 
 PlateShare is a full-stack food donation and distribution platform built with robust features to connect donors and recipients:
